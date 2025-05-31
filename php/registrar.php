@@ -25,18 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt_check->execute();
     $stmt_check->store_result();
 
- if ($stmt_check->num_rows > 0) {
-    header("Location: ../sesion.html");
-    exit();
-}
+    if ($stmt_check->num_rows > 0) {
+        header("Location: ../sesion.html?error=email");
+        exit();
+    }
 
-
-    $hash = password_hash($contra, PASSWORD_BCRYPT);
     $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, contrasena, fecha_nacimiento) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $usuario, $email, $hash, $fechaNacimiento);
+    $stmt->bind_param("ssss", $usuario, $email, $contra, $fechaNacimiento);
 
     if ($stmt->execute()) {
-        header("Location: ../sesion.html");
+        header("Location: ../sesion.html?registro=exito");
         exit();
     } else {
         echo "Error al registrar: " . $stmt->error;
