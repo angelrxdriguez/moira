@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 
 $email = $_SESSION['email'];
 
-$stmt = $conn->prepare("SELECT * FROM ofertas WHERE email_usuario = ?");
+$stmt = $conn->prepare("SELECT * FROM ofertas WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $resultado = $stmt->get_result();
