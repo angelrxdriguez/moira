@@ -1,3 +1,4 @@
+/*generales*/
 body {
   color: white !important;
   font-family: "Oswald", sans-serif !important;
@@ -10,6 +11,11 @@ body {
   height: 100% !important;
   overflow-x: hidden !important;
 }
+.btn.btn-primary{
+background-color: #a8d8ea !important;
+color: #111111;
+}
+/*nav bar*/
 .url-logo{
   border-radius: 50px !important;
 }
@@ -183,17 +189,66 @@ background-color: #a8d8ea;
   background-color: #a8d8ea;
   color: #111111;
   text-decoration: none !important;
-  padding: 5px;
+  width: 100%;
+  padding: 15px;
   border-radius: 10px;
   border: none;
+  font-size: 130%;
 }
 .crearoferta:hover{
-  background-color: #b8ecff;
+  background-color: #c8f0ff !important;
 }
-#modalCrearOferta{
-  color: #111111 !important;
+main.container {
+  background-color: #414141;
+  color: white !important;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  font-family: 'Oswald', sans-serif;
 }
-/*Usuario*/
+
+.titform{
+  font-weight: 600;
+  font-size: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.subform{
+  margin-top: 30px;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #a8d8ea;
+}
+
+button.crearoferta {
+  font-weight: 500;
+  padding: 10px 24px;
+  border-radius: 8px;
+  background-color: #a8d8ea;
+  border: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button.crearoferta:hover {
+  background-color: #0056b3;
+}
+/*Usuario************/
 .contenedor-perfil {
   display: flex;
   justify-content: center;
