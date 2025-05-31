@@ -1,0 +1,249 @@
+body {
+  color: white !important;
+  font-family: "Oswald", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-weight: 400;
+  font-style: normal !important;
+  background-color: #111111;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  overflow-x: hidden !important;
+}
+.url-logo{
+  border-radius: 50px !important;
+}
+.navbar.navbar-expand-lg.navbar-light.bg-dark {
+  color: white !important;
+  background-color: #111111 !important;
+}
+
+.nav-link.active {
+  color: #a8d8ea !important;
+}
+
+.moira-logo {
+  width: 60px !important;
+  border-radius: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: scale(1.3) !important;
+}
+
+.sublogo {
+  margin-left: 20px;
+  margin-top: 10px;
+  color: #a8d8ea;
+}
+
+.navbar-toggler {
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  font-size: 1.5rem !important;
+}
+
+.nav-link {
+  color: white !important;
+}
+
+.custom-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+/*video*/
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.video-container video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: -1;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #1d1d1d96;
+  /*background: linear-gradient(0deg,#a8d8ea71 0%, #111111 100%);
+  */
+  z-index: 0;
+}
+
+.info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.info-box {
+  background-color: #111111;
+  padding: 2rem;
+  border-radius: 10px;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.acceso {
+  border: none;
+  padding: 8px;
+  border-radius: 15px;
+  background-color: #a8d8ea;
+  font-weight: 600;
+  text-decoration: none;
+  color: #111111;
+}
+
+.acceso:hover {
+  background-color: #b8ecff;
+}
+
+/*Sesion*/
+.contenedor-sesion {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  margin-bottom: 120px !important;
+}
+
+.izq-sesion {
+}
+
+.logo-sesion {
+  width: 50%;
+  margin-left: 25%;
+  margin-top: 10%;
+}
+
+.der-sesion {}
+
+.form-sesion {
+}
+.form-sesion.p-5{
+margin-top: 75px;
+}
+.mb-3.registro{
+  width: 75%;
+}
+.pasarela-sesion{
+  color: #a8d8ea;
+}
+.pasarela-sesion:hover{
+  color: #c2efff;
+}
+.btn.btn-primary.registrarse{
+  width: 75%;
+background-color: #a8d8ea;
+  color: #111111;
+  font-weight: 800;
+  border: none;
+}
+.btn.btn-primary.registrarse:hover{
+  background-color: #c2efff;
+}
+.btn.btn-primary.sesion{
+  width: 75%;
+background-color: #a8d8ea;
+  color: #111111;
+  font-weight: 800;
+  border: none;
+}
+.btn.btn-primary.sesion:hover{
+  background-color: #c2efff;
+}
+/*OFERTAR*/
+.misofertas{
+  color: white !important;
+  text-align: center;
+}
+.crearoferta{
+  background-color: #a8d8ea;
+  color: #111111;
+  text-decoration: none !important;
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+}
+.crearoferta:hover{
+  background-color: #b8ecff;
+}
+#modalCrearOferta{
+  color: #111111 !important;
+}
+/*Usuario*/
+.contenedor-perfil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 70px;
+}
+
+.perfil-card {
+  background-color: #222222;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.perfil-foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.perfil-card h2 {
+margin-bottom: 1.5rem;
+}
+
+.perfil-card p {
+  color: rgb(199, 199, 199);
+}
+.cerrar-sesion{
+  
+}
+/*footer*/
+footer {
+  color: white !important;
+  background-color: #111111 !important;
+  text-align: center;
+}
+
+.col-md-4.webs {
+  display: flex;
+  flex-direction: column;
+}
+
+.enlacefooter {
+  color: red;
+}
+
+.enlacefooter:hover {
+  color: brown;
+}
