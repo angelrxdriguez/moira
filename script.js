@@ -9,10 +9,12 @@ $('.form-log').on('submit', function (e) {
     const data = JSON.parse(res);
 
     if (data.success) {
-      // Redirige a perfil y guarda usuario en sessionStorage
-      sessionStorage.setItem('usuarioNombre', ''); // por si lo quieres luego usar
-      window.location.href = 'perfil.html';
-    } else {
+ sessionStorage.setItem('usuario', data.usuario);
+sessionStorage.setItem('email', data.email);
+  window.location.href = 'perfil.html';
+
+}
+ else {
       alert(data.message);
     }
   });
@@ -24,10 +26,10 @@ $("#formCrearOferta").on("submit", function (e) {
 
   $.post("php/guardar_oferta.php", datos, function (respuesta) {
     if (respuesta.success) {
-      alert("✅ Oferta guardada correctamente");
-      window.location.href = "ofertar.html"; // o donde quieras redirigir
+      alert("Oferta guardada correctamente");
+      window.location.href = "ofertar.html";
     } else {
-      alert("❌ Error: " + respuesta.message);
+      alert("Error: " + respuesta.message);
     }
   }, "json");
 });
@@ -105,5 +107,55 @@ $('#tema').on('change', function () {
 
   $('#subtema').prop('disabled', subtemas.length === 0);
 });
-});
+//para que te lleve a sesion o a nueva oferta
+ $(".masoferta").on("click", function (e) {
+      const usuario = sessionStorage.getItem("usuario");
+
+      if (!usuario) {
+        e.preventDefault();
+        window.location.href = "sesion.html";
+      } else {
+        window.location.href = "nueva-oferta.html";
+      }
+    });
+  //perfil.html lo metí en script sino bug
+    // Verificar si hay sesión
+    // Solo redirige en perfil.html si no hay sesión
+if (window.location.pathname.includes("perfil.html")) {
+    const usuario = sessionStorage.getItem("usuario");
+    const email = sessionStorage.getItem("email");
+
+    if (!usuario) {
+      window.location.href = "sesion.html";
+    } else {
+      $("#perfil-nombre").text(usuario);
+      $("#perfil-email").text(email ?? "(sin correo)");
+    }
+
+    $(".cerrar-sesion").on("click", function () {
+      $.get("php/logout.php", function () {
+        sessionStorage.clear();
+        window.location.href = "index.html";
+      });
+    });
+  }
+
+  //ofertas
+  if (window.location.pathname.includes("ofertar.html")) {
+    $.get("php/ofertas_usuario.php", function (data) {
+      console.log("Respuesta de ofertas_usuario.php:", data); // <-- Añade esto para depurar
+
+      if (data.success) {
+        if (data.ofertas.length > 0) {
+          $(".sinoferta").hide();
+        } else {
+          $(".sinoferta").show();
+        }
+      } else {
+        console.warn(data.message);
+        $(".sinoferta").show();
+      }
+    }, "json");
+  }
+});//final del ready
 
