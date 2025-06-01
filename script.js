@@ -206,6 +206,42 @@ if (window.location.pathname.includes("ofertar.html")) {
     }
   }, "json");
 }
+//editar oferta
+$(document).on("click", ".btn-editar", function () {
+  const ofertaId = $(this).data("id");
+
+  const tarjeta = $(this).closest(".card");
+  const titulo = tarjeta.find(".titoferta").text();
+  const descripcion = tarjeta.find(".suboferta").first().text();
+  const fechas = tarjeta.find(".dateoferta").text().match(/\d{4}-\d{2}-\d{2}/g);
+  const cantidad = tarjeta.find(".cantidad-oferta").text().replace(" €", "");
+  const tipoPago = tarjeta.find(".pagooferta").text().match(/\((.*?)\)/)?.[1];
+
+  $("#editar-id").val(ofertaId);
+  $("#editar-titulo").val(titulo);
+  $("#editar-descripcion").val(descripcion);
+  $("#editar-fecha-inicio").val(fechas?.[0] ?? "");
+  $("#editar-fecha-fin").val(fechas?.[1] ?? "");
+  $("#editar-cantidad").val(cantidad);
+  $("#editar-tipo-pago").val(tipoPago);
+
+
+  $("#modalEditarOferta").modal("show");
+});
+
+// Enviar formulario
+$("#formEditarOferta").on("submit", function (e) {
+  e.preventDefault();
+
+  $.post("php/editar_oferta.php", $(this).serialize(), function (res) {
+    if (res.success) {
+      alert("Oferta actualizada correctamente.");
+      location.reload(); // recargar para ver cambios
+    } else {
+      alert("Error: " + res.message);
+    }
+  }, "json");
+});
 
 });//final del ready
 

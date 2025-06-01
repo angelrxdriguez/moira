@@ -331,6 +331,9 @@ font-size: 130%;
 .btn.btn-primary.masoferta2:hover{
 background-color: #b8ecff !important;
 }
+.modal.fade{
+color: #111111 !important;
+}
 /*Usuario************/
 .contenedor-perfil {
   display: flex;
