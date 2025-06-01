@@ -33,6 +33,17 @@ $("#formCrearOferta").on("submit", function (e) {
     }
   }, "json");
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const video = document.querySelector(".video-container video");
+
+  video.play(); // forzamos que empiece a reproducirse
+
+  video.addEventListener("ended", function () {
+    video.pause();
+    video.currentTime = video.duration; // forzamos que se quede en el último frame
+  });
+});
+
 
 /*DOC READY------------------------------------------------------------------------------------------------------------*/
 $(document).ready(function () {

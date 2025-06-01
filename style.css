@@ -189,6 +189,9 @@ background-color: #a8d8ea;
   color: white !important;
   text-align: center;
 }
+.sinoferta{
+  margin-top:100px;
+}
 .crearoferta{
   background-color: #a8d8ea;
   color: #111111;
@@ -302,7 +305,31 @@ background-color: #a8d8ea !important;
 color: #111111;
 border: none;
 width: 50%;
+margin-left: 25%;
 font-size: 130%;
+}
+.banneroferta {
+  background-image: url('source/img/ayuda.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+.tusofertas{
+  background-color: #111111c6;
+  width: 50%;
+  margin-left: 25%;
+  color: #a8d8ea;
+  border-radius: 10px;
+}
+.btn.btn-primary.masoferta2:hover{
+background-color: #b8ecff !important;
 }
 /*Usuario************/
 .contenedor-perfil {

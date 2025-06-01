@@ -1,1 +1,2 @@
-interfaz para los que si tienen tareas creadas, boton para crear otra tarea, vision de tareas
+fotos con las ofertas
+vista demanda
