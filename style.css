@@ -94,7 +94,7 @@ border: none;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #1d1d1d96;
+  background: #a8d8ea58;
   /*background: linear-gradient(0deg,#a8d8ea71 0%, #111111 100%);
   */
   z-index: 0;
@@ -111,7 +111,7 @@ border: none;
 }
 
 .info-box {
-  background-color: #111111;
+  background-color: #111111c6;
   padding: 2rem;
   border-radius: 10px;
   min-width: 250px;
@@ -248,7 +248,62 @@ button.crearoferta {
   border: none;
   transition: background-color 0.3s ease-in-out;
 }
+  .ofertascreadas {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  padding: 25px;
+  gap: 30px;
+}
+.card.mb-3.oferta{
+border: none !important;
+  background-color: #333333 !important;
+}
+.card-body.oferta{
+  background-color: #333333 !important;
+  border-radius: 20px;
+  color: white !important;
+  text-align: left !important;
 
+}
+.card-title.titoferta{
+  background-color: #222222;
+  color: #a8d8ea !important;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+}
+.card-text.suboferta{
+
+}
+.card-text.ubioferta{
+}
+.card-text.dateoferta{
+
+}
+.card-text.pagooferta{
+
+}
+.btn.btn-sm.btn-outline-primary.btn-editar{
+color: #a8d8ea;
+border-color: #a8d8ea;
+}
+.btn.btn-sm.btn-outline-primary.btn-editar:hover{
+  background-color: #a8d8ea;
+  color: #111111;
+}
+.cantidad-oferta{
+  color: #a8d8ea;
+  background-color: #222222;
+  padding: 5px;
+  border-radius: 20px;
+}
+.btn.btn-primary.masoferta2{
+background-color: #a8d8ea !important;
+color: #111111;
+border: none;
+width: 50%;
+font-size: 130%;
+}
 /*Usuario************/
 .contenedor-perfil {
   display: flex;

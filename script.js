@@ -153,19 +153,36 @@ if (window.location.pathname.includes("ofertar.html")) {
         const contenedor = $(".ofertascreadas");
         contenedor.empty();
 
-        $.each(data.ofertas, function (i, oferta) {
-          const tarjeta = $("<div>").addClass("card mb-3");
-          const body = $("<div>").addClass("card-body");
+    $.each(data.ofertas, function (i, oferta) {
+  const tarjeta = $("<div>").addClass("card mb-3 oferta");
+  const body = $("<div>").addClass("card-body oferta");
 
-          $("<h5>").addClass("card-title titoferta").text(oferta.titulo).appendTo(body);
-          $("<p>").addClass("card-text suboferta").text(oferta.descripcion).appendTo(body);
-          $("<p>").addClass("card-text suboferta").html("<strong>Ubicación:</strong> " + oferta.ciudad + ", " + oferta.provincia + ", " + oferta.comunidad).appendTo(body);
-          $("<p>").addClass("card-text suboferta").html("<strong>Fechas:</strong> " + oferta.fecha_inicio + " - " + oferta.fecha_fin).appendTo(body);
-          $("<p>").addClass("card-text suboferta").html("<strong>Pago:</strong> " + oferta.cantidad + " € (" + oferta.tipo_pago + ")").appendTo(body);
+  $("<h3>").addClass("card-title titoferta").text(oferta.titulo).appendTo(body);
+  $("<p>").addClass("card-text suboferta").text(oferta.descripcion).appendTo(body);
+  $("<p>").addClass("card-text ubioferta").html("<strong>Ubicación:</strong> " + oferta.ciudad + ", " + oferta.provincia + ", " + oferta.comunidad).appendTo(body);
+  $("<p>").addClass("card-text dateoferta").html("<strong>Fechas:</strong> " + oferta.fecha_inicio + " - " + oferta.fecha_fin).appendTo(body);
+  $("<p>").addClass("card-text pagooferta").html(`<strong>Pago:</strong> <span class="cantidad-oferta">${oferta.cantidad} €</span> (${oferta.tipo_pago})`).appendTo(body);
 
-          tarjeta.append(body);
-          contenedor.append(tarjeta);
-        });
+  // Botones de acción
+  const acciones = $("<div>").addClass("acciones-oferta mt-3 d-flex justify-content-center gap-2");
+  
+  $("<button>")
+    .addClass("btn btn-sm btn-outline-primary btn-editar")
+    .text("Editar")
+    .attr("data-id", oferta.id)
+    .appendTo(acciones);
+
+  $("<button>")
+    .addClass("btn btn-sm btn-outline-danger btn-eliminar")
+    .text("Eliminar")
+    .attr("data-id", oferta.id)
+    .appendTo(acciones);
+
+  body.append(acciones);
+  tarjeta.append(body);
+  contenedor.append(tarjeta);
+});
+
 
       } else {
         $(".sinoferta").show();
