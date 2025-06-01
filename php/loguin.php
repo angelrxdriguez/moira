@@ -20,7 +20,6 @@ if (empty($email) || empty($contra)) {
     exit();
 }
 
-// Consulta para verificar credenciales (sin hash)
 $stmt = $conn->prepare("SELECT id, usuario, contrasena FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();

@@ -242,6 +242,27 @@ $("#formEditarOferta").on("submit", function (e) {
     }
   }, "json");
 });
+//eliminar oferta
+let ofertaAEliminar = null;
+$(document).on("click", ".btn-eliminar", function () {
+  ofertaAEliminar = $(this).data("id"); 
+  $("#modalConfirmarEliminar").modal("show"); 
+});
+
+$("#btnConfirmarEliminar").on("click", function () {
+  if (!ofertaAEliminar) return;
+
+  $.post("php/eliminar_oferta.php", { id: ofertaAEliminar }, function (res) {
+    if (res.success) {
+      alert("Oferta eliminada con éxito.");
+      location.reload();
+    } else {
+      alert("Error al eliminar: " + res.message);
+    }
+  }, "json");
+
+  $("#modalConfirmarEliminar").modal("hide");
+});
 
 });//final del ready
 
