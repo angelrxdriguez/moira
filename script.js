@@ -141,21 +141,43 @@ if (window.location.pathname.includes("perfil.html")) {
   }
 
   //ofertas
-  if (window.location.pathname.includes("ofertar.html")) {
-    $.get("php/ofertas_usuario.php", function (data) {
-      console.log("Respuesta de ofertas_usuario.php:", data); // <-- Añade esto para depurar
+if (window.location.pathname.includes("ofertar.html")) {
+  $.get("php/ofertas_usuario.php", function (data) {
+    console.log("Respuesta de ofertas_usuario.php:", data);
 
-      if (data.success) {
-        if (data.ofertas.length > 0) {
-          $(".sinoferta").hide();
-        } else {
-          $(".sinoferta").show();
-        }
+    if (data.success) {
+      if (data.ofertas.length > 0) {
+        $(".sinoferta").hide();
+        $(".conoferta").show();
+
+        const contenedor = $(".ofertascreadas");
+        contenedor.empty();
+
+        $.each(data.ofertas, function (i, oferta) {
+          const tarjeta = $("<div>").addClass("card mb-3");
+          const body = $("<div>").addClass("card-body");
+
+          $("<h5>").addClass("card-title titoferta").text(oferta.titulo).appendTo(body);
+          $("<p>").addClass("card-text suboferta").text(oferta.descripcion).appendTo(body);
+          $("<p>").addClass("card-text suboferta").html("<strong>Ubicación:</strong> " + oferta.ciudad + ", " + oferta.provincia + ", " + oferta.comunidad).appendTo(body);
+          $("<p>").addClass("card-text suboferta").html("<strong>Fechas:</strong> " + oferta.fecha_inicio + " - " + oferta.fecha_fin).appendTo(body);
+          $("<p>").addClass("card-text suboferta").html("<strong>Pago:</strong> " + oferta.cantidad + " € (" + oferta.tipo_pago + ")").appendTo(body);
+
+          tarjeta.append(body);
+          contenedor.append(tarjeta);
+        });
+
       } else {
-        console.warn(data.message);
         $(".sinoferta").show();
+        $(".conoferta").hide();
       }
-    }, "json");
-  }
+    } else {
+      console.warn(data.message);
+      $(".sinoferta").show();
+      $(".conoferta").hide();
+    }
+  }, "json");
+}
+
 });//final del ready
 
