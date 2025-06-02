@@ -167,7 +167,13 @@ if (window.location.pathname.includes("ofertar.html")) {
     $.each(data.ofertas, function (i, oferta) {
   const tarjeta = $("<div>").addClass("card mb-3 oferta");
   const body = $("<div>").addClass("card-body oferta");
-
+if (oferta.imagen) {
+  $("<img>")
+    .addClass("img-fluid mb-3 rounded oferta-img")
+    .attr("src", oferta.imagen)
+    .attr("alt", "Imagen de la oferta")
+    .appendTo(body);
+}
   $("<h3>").addClass("card-title titoferta").text(oferta.titulo).appendTo(body);
   $("<p>").addClass("card-text suboferta").text(oferta.descripcion).appendTo(body);
   $("<p>").addClass("card-text ubioferta").html("<strong>Ubicación:</strong> " + oferta.ciudad + ", " + oferta.provincia + ", " + oferta.comunidad).appendTo(body);

@@ -15,6 +15,9 @@ CREATE TABLE temas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL
 );
+DELETE FROM usuarios WHERE id = 9;
+select * from temas;
+DELETE FROM temas WHERE id = 1;
 
 -- Tabla relacionada: subtemas
 CREATE TABLE subtemas (
@@ -157,4 +160,4 @@ CREATE TABLE ofertas (
   FOREIGN KEY (tema_id) REFERENCES temas(id),
   FOREIGN KEY (subtema_id) REFERENCES subtemas(id)
 );
-
+select * from ofertas;

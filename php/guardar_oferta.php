@@ -51,23 +51,26 @@ $nombreOfertante = trim($datos['nombreOfertante']);
 $telefono = trim($datos['telefono']);
 $email = trim($datos['email']);
 $vacantes = (int)$datos['vacantes'];
+$imagen = trim($datos['imagen']);
 
 $query = "INSERT INTO ofertas (
-  usuario_id, tema_id, subtema_id, titulo, descripcion,
+  usuario_id, tema_id, subtema_id, titulo, descripcion, imagen,
   comunidad, provincia, ciudad, direccion,
   fecha_inicio, fecha_fin, dias_horarios,
   tipo_remuneracion, cantidad, tipo_pago,
   nombre_ofertante, telefono, email, vacantes
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+";
 
 $stmt = $conn->prepare($query);
-$stmt->bind_param("iiisssssssssssssisi",
-  $usuario_id, $tema, $subtema, $titulo, $descripcion,
+$stmt->bind_param("iiisssssssssssssissi", 
+  $usuario_id, $tema, $subtema, $titulo, $descripcion, $imagen,
   $comunidad, $provincia, $ciudad, $direccion,
   $fechaInicio, $fechaFin, $diasHorarios,
   $tipoRemuneracion, $cantidad, $tipoPago,
   $nombreOfertante, $telefono, $email, $vacantes
 );
+
 
 if ($stmt->execute()) {
   echo json_encode(["success" => true, "message" => "Oferta guardada con éxito"]);

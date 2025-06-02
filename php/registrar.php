@@ -55,13 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $mail->isHTML(true);
             $mail->Subject = 'Bienvenido a Moira';
-            $mail->Body = "
-                <h3>Hola <b>$usuario</b>,</h3>
-                <p>Gracias por registrarte en Moira.</p>
-                <p>Ya puedes acceder a tu cuenta y comenzar a explorar las ofertas y demandas disponibles.</p>
-                <br>
-                <p>Un saludo,<br>El equipo de Moira</p>
-            ";
+        $mail->AddEmbeddedImage('../source/img/moira-logo2.png', 'logo_moira');
+
+$mail->Body = "
+    <h3>Hola <b>$usuario</b>,</h3>
+    <p>Gracias por registrarte en Moira.</p>
+    <p>Ya puedes acceder a tu cuenta. Trabaja Inteligente y pidete un Moira!</p>
+    <br>
+    <img src='cid:logo_moira' alt='Moira Logo' style='width:150px;'>
+    <p>Un saludo,<br>El equipo de Moira</p>
+";
+
 
             $mail->send();
         } catch (Exception $e) {
