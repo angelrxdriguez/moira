@@ -1,4 +1,9 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../vendor/autoload.php'; // Ajusta el path si hace falta
+
 $host = "localhost";
 $usuario = "root";
 $clave = "";
@@ -34,6 +39,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssss", $usuario, $email, $contra, $fechaNacimiento);
 
     if ($stmt->execute()) {
+        // Envío de correo con PHPMailer
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'panaderorodriguezangel.sangrina@gmail.com';
+            $mail->Password = 'mljq nlhv kzcw vwgh';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            $mail->setFrom('panaderorodriguezangel.sangrina@gmail.com', 'Equipo Moira');
+            $mail->addAddress($email, $usuario);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Bienvenido a Moira';
+            $mail->Body = "
+                <h3>Hola <b>$usuario</b>,</h3>
+                <p>Gracias por registrarte en Moira.</p>
+                <p>Ya puedes acceder a tu cuenta y comenzar a explorar las ofertas y demandas disponibles.</p>
+                <br>
+                <p>Un saludo,<br>El equipo de Moira</p>
+            ";
+
+            $mail->send();
+        } catch (Exception $e) {
+        }
+
         header("Location: ../sesion.html?registro=exito");
         exit();
     } else {
@@ -43,4 +76,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 $conn->close();
-?>
