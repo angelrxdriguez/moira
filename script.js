@@ -289,59 +289,68 @@ $("#btnConfirmarEliminar").on("click", function () {
 });
 //DEMANDAS----------------------
 if (window.location.pathname.includes("demandar.html")) {
-  $.get("php/ofertas_demanda.php", function (data) {
+  $.when(
+    $.get("php/ofertas_demanda.php"),
+    $.get("php/obtener_favoritos.php")
+  ).done(function (ofertasRes, favoritosRes) {
+    const data = ofertasRes[0];
+    const favoritos = favoritosRes[0].favoritos ?? [];
     const contenedor = $(".demandas");
 
     if (data.success && data.ofertas.length > 0) {
       contenedor.empty();
 
-    $.each(data.ofertas, function (i, oferta) {
-  const card = $("<div>").addClass("card mb-3 demanda position-relative");
+      $.each(data.ofertas, function (i, oferta) {
+        const card = $("<div>").addClass("card mb-3 demanda position-relative");
 
-  // Botón de Like arriba a la derecha
-const btnLike = $("<button>")
-  .addClass("btn btn-outline-danger btn-sm position-absolute top-0 end-0 m-4 btn-like")
-  .html("❤️")
-  .attr("title", "Me gusta")
-  .attr("data-id", oferta.id); // ESTA LÍNEA ES CLAVE
+        const esFavorita = favoritos.includes(parseInt(oferta.id));
 
+        const btnLike = $("<button>")
+          .addClass("btn btn-sm position-absolute top-0 end-0 m-4 btn-like")
+          .html("❤️")
+          .attr("title", "Me gusta")
+          .attr("data-id", oferta.id);
 
-  card.append(btnLike);
+        if (esFavorita) {
+          btnLike.addClass("btn-danger text-white active");
+        } else {
+          btnLike.addClass("btn-outline-danger");
+        }
 
-  const body = $("<div>").addClass("card-body");
+        card.append(btnLike);
 
-  if (oferta.imagen) {
-    $("<img>")
-      .addClass("img-fluid rounded mb-3")
-      .attr("src", oferta.imagen)
-      .attr("alt", "Imagen oferta")
-      .appendTo(body);
-  }
+        const body = $("<div>").addClass("card-body");
 
-  $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
-  $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
-  $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
-  $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
-  $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+        if (oferta.imagen) {
+          $("<img>")
+            .addClass("img-fluid rounded mb-3")
+            .attr("src", oferta.imagen)
+            .attr("alt", "Imagen oferta")
+            .appendTo(body);
+        }
 
-  card.append(body);
+        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
 
-  // Botón "Ofrecer servicio" abajo ocupando todo el ancho
-  const btnOfrecer = $("<button>")
-    .addClass("btn btn-primary w-100")
-    .text("Ofrecer servicio")
-    .attr("data-id", oferta.id);
+        card.append(body);
 
-  card.append(btnOfrecer);
+        const btnOfrecer = $("<button>")
+          .addClass("btn btn-primary w-100")
+          .text("Ofrecer servicio")
+          .attr("data-id", oferta.id);
 
-  contenedor.append(card);
-});
-
+        card.append(btnOfrecer);
+        contenedor.append(card);
+      });
     } else {
       contenedor.html("<p class='text-center text-muted'>No hay ofertas disponibles.</p>");
     }
-  }, "json");
+  });
 }
+
 $(document).on("click", ".btn-like", function () {
   const ofertaId = $(this).data("id");
 
