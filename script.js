@@ -299,10 +299,12 @@ if (window.location.pathname.includes("demandar.html")) {
   const card = $("<div>").addClass("card mb-3 demanda position-relative");
 
   // Botón de Like arriba a la derecha
-  const btnLike = $("<button>")
-    .addClass("btn btn-outline-danger btn-sm position-absolute top-0 end-0 m-4 btn-like")
-    .html("❤️")
-    .attr("title", "Me gusta");
+const btnLike = $("<button>")
+  .addClass("btn btn-outline-danger btn-sm position-absolute top-0 end-0 m-4 btn-like")
+  .html("❤️")
+  .attr("title", "Me gusta")
+  .attr("data-id", oferta.id); // ESTA LÍNEA ES CLAVE
+
 
   card.append(btnLike);
 
@@ -340,6 +342,20 @@ if (window.location.pathname.includes("demandar.html")) {
     }
   }, "json");
 }
+$(document).on("click", ".btn-like", function () {
+  const ofertaId = $(this).data("id");
+
+  $.post("php/guardar_favorito.php", { oferta_id: ofertaId }, function (res) {
+    if (res.success) {
+      alert("Agregado a favoritos");
+    } else {
+      alert("Error: " + res.message);
+    }
+  }, "json").fail(function (xhr, status, error) {
+    console.error("Error al guardar favorito:", error);
+    console.log("Detalles:", xhr.responseText);
+  });
+});
 
 
 });//final del ready
