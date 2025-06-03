@@ -161,6 +161,39 @@ CREATE TABLE ofertas (
   FOREIGN KEY (subtema_id) REFERENCES subtemas(id)
 );
 ALTER TABLE ofertas ADD imagen VARCHAR(255) AFTER descripcion;
+DROP TABLE IF EXISTS ofertas;
+
+CREATE TABLE ofertas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  tema_id INT NOT NULL,
+  subtema_id INT NOT NULL,
+  titulo VARCHAR(255) NOT NULL,
+  descripcion TEXT NOT NULL,
+  imagen VARCHAR(255), -- Ruta de imagen (opcional)
+
+  comunidad VARCHAR(100) NOT NULL,
+  provincia VARCHAR(100) NOT NULL,
+  ciudad VARCHAR(100) NOT NULL,
+  direccion VARCHAR(255), -- opcional
+
+  fecha_inicio DATE NOT NULL,
+  fecha_fin DATE, -- opcional
+
+  tipo_remuneracion VARCHAR(50) NOT NULL,
+  cantidad DECIMAL(10,2) NOT NULL,
+  tipo_pago VARCHAR(50) NOT NULL,
+
+  telefono VARCHAR(20) NOT NULL,
+  vacantes INT NOT NULL DEFAULT 1,
+
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (tema_id) REFERENCES temas(id),
+  FOREIGN KEY (subtema_id) REFERENCES subtemas(id)
+);
+
 INSERT INTO ofertas (
   usuario_id, tema_id, subtema_id, titulo, descripcion, imagen,
   comunidad, provincia, ciudad, direccion,
@@ -168,9 +201,9 @@ INSERT INTO ofertas (
   tipo_remuneracion, cantidad, tipo_pago,
   nombre_ofertante, telefono, email, vacantes
 ) VALUES (
-  1, -- ID de usuario existente
+  9, -- ID de usuario existente
   2, -- ID de tema existente
-  5, -- ID de subtema existente
+  22, -- ID de subtema existente
   'Cuidado de jardín de verano',
   'Buscamos a alguien que ayude con el mantenimiento del jardín durante los meses de verano.',
   'source/img/limpiando.jpg',
@@ -189,6 +222,15 @@ INSERT INTO ofertas (
   'ana@example.com',
   1
 );
-
+select * from subtemas;
 select * from ofertas;
 select * from usuarios;
+CREATE TABLE favoritos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  oferta_id INT NOT NULL,
+  fecha_marcado DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (oferta_id) REFERENCES ofertas(id) ON DELETE CASCADE,
+  UNIQUE KEY (usuario_id, oferta_id)
+);

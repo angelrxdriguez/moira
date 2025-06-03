@@ -287,6 +287,60 @@ $("#btnConfirmarEliminar").on("click", function () {
 
   $("#modalConfirmarEliminar").modal("hide");
 });
+//DEMANDAS----------------------
+if (window.location.pathname.includes("demandar.html")) {
+  $.get("php/ofertas_demanda.php", function (data) {
+    const contenedor = $(".demandas");
+
+    if (data.success && data.ofertas.length > 0) {
+      contenedor.empty();
+
+    $.each(data.ofertas, function (i, oferta) {
+  const card = $("<div>").addClass("card mb-3 demanda position-relative");
+
+  // Botón de Like arriba a la derecha
+  const btnLike = $("<button>")
+    .addClass("btn btn-outline-danger btn-sm position-absolute top-0 end-0 m-4 btn-like")
+    .html("❤️")
+    .attr("title", "Me gusta");
+
+  card.append(btnLike);
+
+  const body = $("<div>").addClass("card-body");
+
+  if (oferta.imagen) {
+    $("<img>")
+      .addClass("img-fluid rounded mb-3")
+      .attr("src", oferta.imagen)
+      .attr("alt", "Imagen oferta")
+      .appendTo(body);
+  }
+
+  $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+  $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+  $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+  $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+  $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+
+  card.append(body);
+
+  // Botón "Ofrecer servicio" abajo ocupando todo el ancho
+  const btnOfrecer = $("<button>")
+    .addClass("btn btn-primary w-100")
+    .text("Ofrecer servicio")
+    .attr("data-id", oferta.id);
+
+  card.append(btnOfrecer);
+
+  contenedor.append(card);
+});
+
+    } else {
+      contenedor.html("<p class='text-center text-muted'>No hay ofertas disponibles.</p>");
+    }
+  }, "json");
+}
+
 
 });//final del ready
 

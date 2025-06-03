@@ -2,7 +2,7 @@
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['email'])) {
     echo json_encode(["success" => false, "message" => "No hay sesión activa"]);
     exit;
 }
@@ -18,26 +18,23 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Obtener ID del usuario por nombre de usuario (sesión)
-if (!isset($_SESSION['email'])) {
-  echo json_encode(["success" => false, "message" => "No hay sesión activa"]);
-  exit;
-}
-
+// Obtener el ID del usuario actual
+$email = $_SESSION['email'];
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
-$stmt->bind_param("s", $_SESSION['email']);
-
+$stmt->bind_param("s", $email);
 $stmt->execute();
 $resultado = $stmt->get_result();
+
 if ($resultado->num_rows !== 1) {
-    echo json_encode(["success" => false, "message" => "Usuario no válido"]);
+    echo json_encode(["success" => false, "message" => "Usuario no encontrado"]);
     exit;
 }
+
 $usuario_id = $resultado->fetch_assoc()['id'];
 $stmt->close();
 
-// Obtener ofertas de ese usuario
-$stmt = $conn->prepare("SELECT * FROM ofertas WHERE usuario_id = ?");
+// Obtener las ofertas de otros usuarios
+$stmt = $conn->prepare("SELECT * FROM ofertas WHERE usuario_id != ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -48,3 +45,4 @@ while ($fila = $resultado->fetch_assoc()) {
 }
 
 echo json_encode(["success" => true, "ofertas" => $ofertas]);
+?>

@@ -369,6 +369,33 @@ margin-bottom: 1.5rem;
 .cerrar-sesion{
   
 }
+/*DEMANDA----------------*/
+.contenedor-demandas{
+
+}
+.demandas{
+  margin: 40px;
+display: grid !important;
+grid-template-columns: repeat(3,1fr) !important;
+gap: 15px;
+background-color: #222222 !important;
+
+}
+.demanda{
+  background-color: #333333 !important;
+  color: white !important;
+}
+.demanda .btn-like {
+  z-index: 1;
+  border-radius: 100%;
+  font-size: 1.2rem;
+  padding: 0.4em 0.6em;
+}
+
+.demanda .btn-primary {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
 /*footer*/
 footer {
   color: white !important;

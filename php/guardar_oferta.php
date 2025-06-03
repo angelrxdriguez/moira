@@ -2,10 +2,11 @@
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['email'])) {
   echo json_encode(["success" => false, "message" => "Sesión no iniciada"]);
   exit();
 }
+
 
 $host = "localhost";
 $usuario = "root";
@@ -19,8 +20,15 @@ if ($conn->connect_error) {
 }
 
 // Obtener ID del usuario desde la sesión
-$stmt = $conn->prepare("SELECT id FROM usuarios WHERE usuario = ?");
-$stmt->bind_param("s", $_SESSION['usuario']);
+$stmt = $conn->prepare("SELECT id, email FROM usuarios WHERE email = ?");
+$stmt->bind_param("s", $_SESSION['email']);
+$stmt->execute();
+$resultado = $stmt->get_result();
+if ($resultado->num_rows !== 1) {
+  echo json_encode(["success" => false, "message" => "Usuario no válido"]);
+  exit();
+}
+
 $stmt->execute();
 $resultado = $stmt->get_result();
 if ($resultado->num_rows !== 1) {
