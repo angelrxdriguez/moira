@@ -234,3 +234,4 @@ CREATE TABLE favoritos (
   FOREIGN KEY (oferta_id) REFERENCES ofertas(id) ON DELETE CASCADE,
   UNIQUE KEY (usuario_id, oferta_id)
 );
+select * from favoritos;

@@ -352,19 +352,24 @@ if (window.location.pathname.includes("demandar.html")) {
 }
 
 $(document).on("click", ".btn-like", function () {
-  const ofertaId = $(this).data("id");
+  const btn = $(this);
+  const ofertaId = btn.data("id");
 
   $.post("php/guardar_favorito.php", { oferta_id: ofertaId }, function (res) {
     if (res.success) {
-      alert("Agregado a favoritos");
+      if (res.action === "added") {
+        btn.removeClass("btn-outline-danger").addClass("btn-danger text-white active");
+      } else if (res.action === "removed") {
+        btn.removeClass("btn-danger text-white active").addClass("btn-outline-danger");
+      }
     } else {
       alert("Error: " + res.message);
     }
   }, "json").fail(function (xhr, status, error) {
-    console.error("Error al guardar favorito:", error);
-    console.log("Detalles:", xhr.responseText);
+    console.error("Error al guardar/eliminar favorito:", error);
   });
 });
+
 
 
 });//final del ready

@@ -21,7 +21,7 @@ if ($conn->connect_error) {
 $oferta_id = intval($_POST['oferta_id']);
 $email = $_SESSION['email'];
 
-// Obtener el ID del usuario
+// Obtener ID del usuario
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -35,15 +35,27 @@ if ($result->num_rows !== 1) {
 $usuario_id = $result->fetch_assoc()['id'];
 $stmt->close();
 
-// Insertar en favoritos
-$stmt = $conn->prepare("INSERT IGNORE INTO favoritos (usuario_id, oferta_id) VALUES (?, ?)");
+// Verificar si ya está en favoritos
+$stmt = $conn->prepare("SELECT 1 FROM favoritos WHERE usuario_id = ? AND oferta_id = ?");
 $stmt->bind_param("ii", $usuario_id, $oferta_id);
+$stmt->execute();
+$existe = $stmt->get_result()->num_rows > 0;
+$stmt->close();
 
-if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Favorito guardado"]);
+if ($existe) {
+    // Eliminar de favoritos
+    $stmt = $conn->prepare("DELETE FROM favoritos WHERE usuario_id = ? AND oferta_id = ?");
+    $stmt->bind_param("ii", $usuario_id, $oferta_id);
+    $stmt->execute();
+    $stmt->close();
+    echo json_encode(["success" => true, "action" => "removed"]);
 } else {
-    echo json_encode(["success" => false, "message" => "Error al guardar favorito"]);
+    // Insertar en favoritos
+    $stmt = $conn->prepare("INSERT INTO favoritos (usuario_id, oferta_id) VALUES (?, ?)");
+    $stmt->bind_param("ii", $usuario_id, $oferta_id);
+    $stmt->execute();
+    $stmt->close();
+    echo json_encode(["success" => true, "action" => "added"]);
 }
 
-$stmt->close();
 $conn->close();
