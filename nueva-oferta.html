@@ -69,14 +69,15 @@
       <input type="text" id="titulo" name="titulo" class="form-control" required>
     </div>
 
-    <h5 class="mt-4 subform">Descripción</h5>
     <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción</label>
       <textarea id="descripcion" name="descripcion" class="form-control" rows="4" placeholder="Tareas, condiciones..." required></textarea>
     </div>
-<div class="mb-3">
-  <label for="imagen" class="form-label">Ruta de la imagen</label>
-  <input type="text" id="imagen" name="imagen" class="form-control" placeholder="Ej: img/oferta1.jpg">
-</div>
+
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Ruta de la imagen</label>
+      <input type="text" id="imagen" name="imagen" class="form-control" placeholder="Ej: img/oferta1.jpg">
+    </div>
 
     <h5 class="mt-4 subform">Ubicación</h5>
     <div class="row">
@@ -98,7 +99,7 @@
       <input type="text" id="direccion" name="direccion" class="form-control">
     </div>
 
-    <h5 class="mt-4 subform">Duración y Horario</h5>
+    <h5 class="mt-4 subform">Duración</h5>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label for="fechaInicio" class="form-label">Inicio</label>
@@ -108,10 +109,6 @@
         <label for="fechaFin" class="form-label">Fin (opcional)</label>
         <input type="date" id="fechaFin" name="fechaFin" class="form-control">
       </div>
-    </div>
-    <div class="mb-3">
-      <label for="diasHorarios" class="form-label">Días y horarios</label>
-      <textarea id="diasHorarios" name="diasHorarios" class="form-control" rows="2" required></textarea>
     </div>
 
     <h5 class="mt-4 subform">Remuneración</h5>
@@ -142,16 +139,8 @@
     <h5 class="mt-4 subform">Contacto</h5>
     <div class="row">
       <div class="col-md-6 mb-3">
-        <label for="nombreOfertante" class="form-label">Nombre</label>
-        <input type="text" id="nombreOfertante" name="nombreOfertante" class="form-control" required>
-      </div>
-      <div class="col-md-6 mb-3">
         <label for="telefono" class="form-label">Teléfono</label>
         <input type="tel" id="telefono" name="telefono" class="form-control" required>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="email" class="form-label">Correo De Contacto</label>
-        <input type="email" id="email" name="email" class="form-control">
       </div>
       <div class="col-md-6 mb-3">
         <label for="vacantes" class="form-label">Vacantes</label>
@@ -164,6 +153,7 @@
     </div>
   </form>
 </main>
+
 
 
 <footer class="text-center text-white" style="background-color: #000000">

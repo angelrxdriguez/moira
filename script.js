@@ -23,26 +23,23 @@ $("#formCrearOferta").on("submit", function (e) {
   e.preventDefault();
 
   const datos = $(this).serialize();
+  console.log("Formulario capturado con datos:", datos);
 
   $.post("php/guardar_oferta.php", datos, function (respuesta) {
+    console.log("Respuesta del servidor:", respuesta);
+
     if (respuesta.success) {
       alert("Oferta guardada correctamente");
       window.location.href = "ofertar.html";
     } else {
       alert("Error: " + respuesta.message);
     }
-  }, "json");
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const video = document.querySelector(".video-container video");
-
-  video.play(); // forzamos que empiece a reproducirse
-
-  video.addEventListener("ended", function () {
-    video.pause();
-    video.currentTime = video.duration; // forzamos que se quede en el último frame
+  }, "json").fail(function (xhr, status, error) {
+    console.error("Error en la petición:", error);
+    console.log("Detalles:", xhr.responseText);
   });
 });
+
 
 
 /*DOC READY------------------------------------------------------------------------------------------------------------*/
@@ -215,25 +212,46 @@ if (oferta.imagen) {
 //editar oferta
 $(document).on("click", ".btn-editar", function () {
   const ofertaId = $(this).data("id");
-
   const tarjeta = $(this).closest(".card");
-  const titulo = tarjeta.find(".titoferta").text();
-  const descripcion = tarjeta.find(".suboferta").first().text();
-  const fechas = tarjeta.find(".dateoferta").text().match(/\d{4}-\d{2}-\d{2}/g);
-  const cantidad = tarjeta.find(".cantidad-oferta").text().replace(" €", "");
-  const tipoPago = tarjeta.find(".pagooferta").text().match(/\((.*?)\)/)?.[1];
 
+  const titulo = tarjeta.find(".titoferta").text();
+  const descripcion = tarjeta.find(".suboferta").text();
+  const imagen = tarjeta.find("img.oferta-img").attr("src") || "";
+
+  const ubicacionTexto = tarjeta.find(".ubioferta").text();
+  const ubicacionPartes = ubicacionTexto.match(/Ubicación:\s*(.*?),\s*(.*?),\s*(.*)/);
+  const ciudad = ubicacionPartes?.[1] ?? "";
+  const provincia = ubicacionPartes?.[2] ?? "";
+  const comunidad = ubicacionPartes?.[3] ?? "";
+
+  const fechas = tarjeta.find(".dateoferta").text().match(/\d{4}-\d{2}-\d{2}/g);
+  const fechaInicio = fechas?.[0] ?? "";
+  const fechaFin = fechas?.[1] ?? "";
+
+  const cantidad = tarjeta.find(".cantidad-oferta").text().replace(" €", "");
+  const tipoPago = tarjeta.find(".pagooferta").text().match(/\((.*?)\)/)?.[1] ?? "";
+  const tipoRemuneracion = tarjeta.find(".pagooferta").text().match(/Pago:\s*(.*?)\s*\d/)[1].trim();
+
+  // Rellenar los campos del modal
   $("#editar-id").val(ofertaId);
+  $("#editar-imagen").val(imagen);
   $("#editar-titulo").val(titulo);
   $("#editar-descripcion").val(descripcion);
-  $("#editar-fecha-inicio").val(fechas?.[0] ?? "");
-  $("#editar-fecha-fin").val(fechas?.[1] ?? "");
+
+  $("#editar-ciudad").val(ciudad);
+  $("#editar-provincia").val(provincia);
+  $("#editar-comunidad").val(comunidad);
+
+  $("#editar-fecha-inicio").val(fechaInicio);
+  $("#editar-fecha-fin").val(fechaFin);
+
   $("#editar-cantidad").val(cantidad);
   $("#editar-tipo-pago").val(tipoPago);
-
+  $("#editar-tipo-remuneracion").val(tipoRemuneracion);
 
   $("#modalEditarOferta").modal("show");
 });
+
 
 // Enviar formulario
 $("#formEditarOferta").on("submit", function (e) {

@@ -160,4 +160,35 @@ CREATE TABLE ofertas (
   FOREIGN KEY (tema_id) REFERENCES temas(id),
   FOREIGN KEY (subtema_id) REFERENCES subtemas(id)
 );
+ALTER TABLE ofertas ADD imagen VARCHAR(255) AFTER descripcion;
+INSERT INTO ofertas (
+  usuario_id, tema_id, subtema_id, titulo, descripcion, imagen,
+  comunidad, provincia, ciudad, direccion,
+  fecha_inicio, fecha_fin, dias_horarios,
+  tipo_remuneracion, cantidad, tipo_pago,
+  nombre_ofertante, telefono, email, vacantes
+) VALUES (
+  1, -- ID de usuario existente
+  2, -- ID de tema existente
+  5, -- ID de subtema existente
+  'Cuidado de jardín de verano',
+  'Buscamos a alguien que ayude con el mantenimiento del jardín durante los meses de verano.',
+  'source/img/limpiando.jpg',
+  'Galicia',
+  'Pontevedra',
+  'A Guarda',
+  'Calle Rosalía de Castro, 12',
+  '2025-06-15',
+  '2025-08-31',
+  'Lunes a viernes de 9:00 a 13:00',
+  'Por hora',
+  10.00,
+  'Efectivo',
+  'Ana López',
+  '612345678',
+  'ana@example.com',
+  1
+);
+
 select * from ofertas;
+select * from usuarios;
