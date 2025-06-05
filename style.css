@@ -395,7 +395,22 @@ background-color: #222222 !important;
 .demanda .btn-primary {
   border-radius: 0 0 0.5rem 0.5rem;
 }
-
+.btn-outline-danger{
+  color: #a8d8ea !important;
+  border: 3px solid #a8d8ea !important;
+  border-color: #a8d8ea !important;
+}
+.btn-outline-danger:hover{
+  color: #111111 !important;
+  background-color: #a8d8ea !important;
+  border-color: #000000 !important;
+}
+.btn-danger.text-white.active{
+  color: #111111 !important;
+  background-color: #a8d8ea !important;
+  border: 3px solid #a8d8ea !important;
+  border-color: #000000 !important;
+}
 /*footer*/
 footer {
   color: white !important;
