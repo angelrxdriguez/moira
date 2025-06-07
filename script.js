@@ -306,68 +306,10 @@ $("#btnConfirmarEliminar").on("click", function () {
 });
 //DEMANDAS----------------------
 if (window.location.pathname.includes("demandar.html")) {
-  $.when(
-    $.get("php/ofertas_demanda.php"),
-    $.get("php/obtener_favoritos.php")
-  ).done(function (ofertasRes, favoritosRes) {
-    const data = ofertasRes[0];
-    const favoritos = favoritosRes[0].favoritos ?? [];
-    const contenedor = $(".demandas");
-
-    if (data.success && data.ofertas.length > 0) {
-      contenedor.empty();
-
-      $.each(data.ofertas, function (i, oferta) {
-        const card = $("<div>").addClass("card mb-3 demanda position-relative");
-
-        const esFavorita = favoritos.includes(parseInt(oferta.id));
-
-      const btnLike = $("<button>")
-  .addClass("btn btn-sm position-absolute top-0 end-0 m-4 btn-like")
-  .attr("title", "Me gusta")
-  .attr("data-id", oferta.id)
-  .html('<i class="bi bi-heart text-danger icono-like"></i>');
-
-
-        if (esFavorita) {
-          btnLike.addClass("btn-danger text-white active");
-        } else {
-          btnLike.addClass("btn-outline-danger");
-        }
-
-        card.append(btnLike);
-
-        const body = $("<div>").addClass("card-body");
-
-        if (oferta.imagen) {
-          $("<img>")
-            .addClass("img-fluid rounded mb-3")
-            .attr("src", oferta.imagen)
-            .attr("alt", "Imagen oferta")
-            .appendTo(body);
-        }
-
-        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
-        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
-
-        card.append(body);
-
-        const btnOfrecer = $("<button>")
-      .addClass("btn btn-primary w-100 btn-ofrecer-servicio")
-          .text("Ofrecer servicio")
-          .attr("data-id", oferta.id);
-
-        card.append(btnOfrecer);
-        contenedor.append(card);
-      });
-    } else {
-      contenedor.html("<p class='text-center text-muted'>No hay ofertas disponibles.</p>");
-    }
-  });
+  cargarOfertasFiltradas(); // ✅ cargar la primera vez
 }
+
+
 
 $(document).on("click", ".btn-like", function () {
   const btn = $(this);
@@ -495,6 +437,99 @@ if (window.location.pathname.includes("solicitudes.html")) {
     }
   });
 }
+  // Cargar temas desde PHP
+  $.getJSON("php/temas.php", function (temas) {
+    temas.forEach(function (tema) {
+      $("#filtro-tema").append(new Option(tema.nombre, tema.nombre));
+    });
+  });
+
+ // Cargar ubicaciones desde JSON
+let ubicacionesData = {};
+
+$.getJSON("data/ubicaciones.json", function (data) {
+  ubicacionesData = data;
+  Object.keys(data).forEach(function (comunidad) {
+    $("#filtro-comunidad").append(new Option(comunidad, comunidad));
+  });
+});
+
+$("#filtro-comunidad").on("change", function () {
+  const comunidad = $(this).val();
+  const provincias = comunidad ? Object.keys(ubicacionesData[comunidad]) : [];
+  $("#filtro-provincia").empty().append(new Option("Todas", "")).prop("disabled", !comunidad);
+  $("#filtro-ciudad").empty().append(new Option("Todas", "")).prop("disabled", true);
+
+  provincias.forEach(function (provincia) {
+    $("#filtro-provincia").append(new Option(provincia, provincia));
+  });
+});
+
+$("#filtro-provincia").on("change", function () {
+  const comunidad = $("#filtro-comunidad").val();
+  const provincia = $(this).val();
+  const ciudades = comunidad && provincia ? ubicacionesData[comunidad][provincia] : [];
+  $("#filtro-ciudad").empty().append(new Option("Todas", "")).prop("disabled", !provincia);
+
+  ciudades.forEach(function (ciudad) {
+    $("#filtro-ciudad").append(new Option(ciudad, ciudad));
+  });
+});
+
+
+
+  // Filtrar al cambiar cualquier select
+  $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("change", function () {
+    cargarOfertasFiltradas();
+  });
+function cargarOfertasFiltradas() {
+  const filtros = {
+    tema: $("#filtro-tema").val(),
+    comunidad: $("#filtro-comunidad").val(),
+    provincia: $("#filtro-provincia").val(),
+    ciudad: $("#filtro-ciudad").val()
+  };
+
+  $.get("php/ofertas_demanda.php", filtros, function (data) {
+    const contenedor = $(".demandas");
+    contenedor.empty();
+
+    if (data.success && data.ofertas.length > 0) {
+      data.ofertas.forEach(function (oferta) {
+        const card = $("<div>").addClass("card mb-3 demanda position-relative");
+
+        const body = $("<div>").addClass("card-body");
+
+        if (oferta.imagen) {
+          $("<img>")
+            .addClass("img-fluid rounded mb-3")
+            .attr("src", oferta.imagen)
+            .attr("alt", "Imagen oferta")
+            .appendTo(body);
+        }
+
+        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+
+        const btnOfrecer = $("<button>")
+          .addClass("btn btn-primary w-100")
+          .text("Ofrecer servicio")
+          .attr("data-id", oferta.id);
+
+        card.append(body).append(btnOfrecer);
+        contenedor.append(card);
+      });
+    } else {
+      contenedor.html("<p class='text-center text-muted'>No hay ofertas que coincidan con los filtros.</p>");
+    }
+  }, "json");
+}
+$("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("change", function () {
+  cargarOfertasFiltradas();
+});
 
 
 

@@ -18,27 +18,64 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Obtener el ID del usuario actual
+// Obtener ID de usuario actual
 $email = $_SESSION['email'];
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$resultado = $stmt->get_result();
+$res = $stmt->get_result();
 
-if ($resultado->num_rows !== 1) {
+if ($res->num_rows !== 1) {
     echo json_encode(["success" => false, "message" => "Usuario no encontrado"]);
     exit;
 }
 
-$usuario_id = $resultado->fetch_assoc()['id'];
+$usuario_id = $res->fetch_assoc()['id'];
 $stmt->close();
 
-// Obtener las ofertas de otros usuarios
-$stmt = $conn->prepare("SELECT * FROM ofertas WHERE usuario_id != ?");
-$stmt->bind_param("i", $usuario_id);
+// Filtros desde GET
+$tema = $_GET['tema'] ?? '';
+$comunidad = $_GET['comunidad'] ?? '';
+$provincia = $_GET['provincia'] ?? '';
+$ciudad = $_GET['ciudad'] ?? '';
+
+// Base con JOIN a temas
+$sql = "SELECT ofertas.* 
+        FROM ofertas 
+        JOIN temas ON ofertas.tema_id = temas.id 
+        WHERE ofertas.usuario_id != ?";
+$tipos = "i";
+$valores = [$usuario_id];
+
+// Filtros dinámicos
+if (!empty($tema)) {
+    $sql .= " AND temas.nombre = ?";
+    $tipos .= "s";
+    $valores[] = $tema;
+}
+if (!empty($comunidad)) {
+    $sql .= " AND ofertas.comunidad = ?";
+    $tipos .= "s";
+    $valores[] = $comunidad;
+}
+if (!empty($provincia)) {
+    $sql .= " AND ofertas.provincia = ?";
+    $tipos .= "s";
+    $valores[] = $provincia;
+}
+if (!empty($ciudad)) {
+    $sql .= " AND ofertas.ciudad = ?";
+    $tipos .= "s";
+    $valores[] = $ciudad;
+}
+
+// Preparar y ejecutar
+$stmt = $conn->prepare($sql);
+$stmt->bind_param($tipos, ...$valores);
 $stmt->execute();
 $resultado = $stmt->get_result();
 
+// Formatear resultados
 $ofertas = [];
 while ($fila = $resultado->fetch_assoc()) {
     $ofertas[] = $fila;
