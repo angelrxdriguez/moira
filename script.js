@@ -50,6 +50,14 @@ $(document).ready(function () {
       $('.sesion-link').text(data.usuario).attr('href', 'perfil.html');
     }
   });
+   $(".nav-link .icono-like").hover(
+    function () {
+      $(this).removeClass("bi-heart").addClass("bi-heart-fill");
+    },
+    function () {
+      $(this).removeClass("bi-heart-fill").addClass("bi-heart");
+    }
+  );
   //UBICACIONES--------
       let ubicaciones = {};
 
@@ -305,11 +313,12 @@ if (window.location.pathname.includes("demandar.html")) {
 
         const esFavorita = favoritos.includes(parseInt(oferta.id));
 
-        const btnLike = $("<button>")
-          .addClass("btn btn-sm position-absolute top-0 end-0 m-4 btn-like")
-          .html("❤️")
-          .attr("title", "Me gusta")
-          .attr("data-id", oferta.id);
+      const btnLike = $("<button>")
+  .addClass("btn btn-sm position-absolute top-0 end-0 m-4 btn-like")
+  .attr("title", "Me gusta")
+  .attr("data-id", oferta.id)
+  .html('<i class="bi bi-heart text-danger icono-like"></i>');
+
 
         if (esFavorita) {
           btnLike.addClass("btn-danger text-white active");
@@ -369,6 +378,49 @@ $(document).on("click", ".btn-like", function () {
     console.error("Error al guardar/eliminar favorito:", error);
   });
 });
+//favorito html
+if (window.location.pathname.includes("favorito.html")) {
+  $.get("php/favoritos_usuario.php", function (data) {
+    const contenedor = $(".favs");
+
+    if (data.success && data.ofertas.length > 0) {
+      contenedor.empty();
+
+      $.each(data.ofertas, function (i, oferta) {
+        const card = $("<div>").addClass("card mb-3 fav position-relative");
+        const body = $("<div>").addClass("card-body");
+
+     if (oferta.imagen) {
+  $("<img>")
+    .addClass("img-fluid rounded mb-3 oferta-img-mini")
+    .attr("src", oferta.imagen)
+    .attr("alt", "Imagen oferta")
+    .appendTo(body);
+}
+
+
+        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+
+        card.append(body);
+
+        const btnOfrecer = $("<button>")
+          .addClass("btn btn-primary w-100")
+          .text("Ofrecer servicio")
+          .attr("data-id", oferta.id);
+
+        card.append(btnOfrecer);
+        contenedor.append(card);
+      });
+    } else {
+      contenedor.html("<p class='text-center text-muted'>No tienes ofertas marcadas como favoritas.</p>");
+    }
+  });
+}
+
 
 
 

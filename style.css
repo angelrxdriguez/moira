@@ -411,6 +411,34 @@ background-color: #222222 !important;
   border: 3px solid #a8d8ea !important;
   border-color: #000000 !important;
 }
+.icono-like:hover{
+}
+/*favoritos*/
+.contenedor-favs{
+
+}
+.favs{
+  margin: 40px;
+display: grid !important;
+grid-template-columns: repeat(1,1fr) !important;
+gap: 15px;
+background-color: #222222 !important;
+
+}
+.fav{
+  background-color: #333333 !important;
+  color: white !important;
+  width: 50% !important;
+margin-left: 25% !important;
+}
+.oferta-img-mini {
+  max-width: 70%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /*footer*/
 footer {
   color: white !important;
