@@ -116,6 +116,60 @@
         >
     </div>
   </footer>
+<!-- Modal: Solicitar Servicio -->
+<div class="modal fade" id="modalSolicitudServicio" tabindex="-1" aria-labelledby="modalSolicitudLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <form id="formSolicitudServicio" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalSolicitudLabel">Solicitar Servicio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="oferta_id" id="solicitud-oferta-id">
+
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="apellidos" class="form-label">Apellidos</label>
+            <input type="text" name="apellidos" id="apellidos" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="tel" name="telefono" id="telefono" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="presentacion" class="form-label">Presentación</label>
+            <textarea name="presentacion" id="presentacion" class="form-control" rows="4"></textarea>
+          </div>
+<div class="mb-3">
+  <label for="archivo" class="form-label">Ruta o nombre de archivo (opcional)</label>
+  <input type="text" name="archivo" id="archivo" class="form-control">
+</div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
 
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

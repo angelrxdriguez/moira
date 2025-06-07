@@ -172,22 +172,23 @@ if (window.location.pathname.includes("ofertar.html")) {
     $.each(data.ofertas, function (i, oferta) {
   const tarjeta = $("<div>").addClass("card mb-3 oferta");
   const body = $("<div>").addClass("card-body oferta");
-if (oferta.imagen) {
-  $("<img>")
-    .addClass("img-fluid mb-3 rounded oferta-img")
-    .attr("src", oferta.imagen)
-    .attr("alt", "Imagen de la oferta")
-    .appendTo(body);
-}
+
+  if (oferta.imagen) {
+    $("<img>")
+      .addClass("img-fluid mb-3 rounded oferta-img")
+      .attr("src", oferta.imagen)
+      .attr("alt", "Imagen de la oferta")
+      .appendTo(body);
+  }
+
   $("<h3>").addClass("card-title titoferta").text(oferta.titulo).appendTo(body);
   $("<p>").addClass("card-text suboferta").text(oferta.descripcion).appendTo(body);
   $("<p>").addClass("card-text ubioferta").html("<strong>Ubicación:</strong> " + oferta.ciudad + ", " + oferta.provincia + ", " + oferta.comunidad).appendTo(body);
   $("<p>").addClass("card-text dateoferta").html("<strong>Fechas:</strong> " + oferta.fecha_inicio + " - " + oferta.fecha_fin).appendTo(body);
   $("<p>").addClass("card-text pagooferta").html(`<strong>Pago:</strong> <span class="cantidad-oferta">${oferta.cantidad} €</span> (${oferta.tipo_pago})`).appendTo(body);
 
-  // Botones de acción
   const acciones = $("<div>").addClass("acciones-oferta mt-3 d-flex justify-content-center gap-2");
-  
+
   $("<button>")
     .addClass("btn btn-sm btn-outline-primary btn-editar")
     .text("Editar")
@@ -200,10 +201,18 @@ if (oferta.imagen) {
     .attr("data-id", oferta.id)
     .appendTo(acciones);
 
+  // NUEVO BOTÓN DE VER SOLICITUDES
+  $("<a>")
+    .addClass("btn btn-sm btn-outline-success")
+    .text("Solicitudes")
+    .attr("href", `solicitudes.html?id=${oferta.id}`)
+    .appendTo(acciones);
+
   body.append(acciones);
   tarjeta.append(body);
   contenedor.append(tarjeta);
 });
+
 
 
       } else {
@@ -347,7 +356,7 @@ if (window.location.pathname.includes("demandar.html")) {
         card.append(body);
 
         const btnOfrecer = $("<button>")
-          .addClass("btn btn-primary w-100")
+      .addClass("btn btn-primary w-100 btn-ofrecer-servicio")
           .text("Ofrecer servicio")
           .attr("data-id", oferta.id);
 
@@ -408,7 +417,7 @@ if (window.location.pathname.includes("favorito.html")) {
         card.append(body);
 
         const btnOfrecer = $("<button>")
-          .addClass("btn btn-primary w-100")
+       .addClass("btn btn-primary w-100 btn-ofrecer-servicio")
           .text("Ofrecer servicio")
           .attr("data-id", oferta.id);
 
@@ -420,6 +429,73 @@ if (window.location.pathname.includes("favorito.html")) {
     }
   });
 }
+//servicio
+// Al hacer clic en "Ofrecer servicio"
+$(document).on("click", ".btn-ofrecer-servicio", function () {
+  const ofertaId = $(this).data("id");
+  $("#solicitud-oferta-id").val(ofertaId);
+  $("#modalSolicitudServicio").modal("show");
+});
+$("#formSolicitudServicio").on("submit", function (e) {
+  e.preventDefault();
+
+  const datos = $(this).serialize();
+
+  $.post("php/guardar_solicitud.php", datos, function (respuesta) {
+    if (respuesta.success) {
+      alert("Solicitud enviada correctamente.");
+      $("#modalSolicitudServicio").modal("hide");
+      $("#formSolicitudServicio")[0].reset();
+    } else {
+      alert("Error: " + respuesta.message);
+    }
+  }, "json").fail(function (xhr, status, error) {
+    console.error("Error al enviar solicitud:", error);
+    console.log("Detalles:", xhr.responseText);
+  });
+});
+if (window.location.pathname.includes("solicitudes.html")) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ofertaId = urlParams.get("id");
+
+  if (!ofertaId) {
+    $(".solicitudes").html("<p class='text-center text-muted'>ID de oferta no proporcionado.</p>");
+    return;
+  }
+
+  $.get("php/solicitudes_oferta.php", { id: ofertaId }, function (data) {
+    const contenedor = $(".solicitudes");
+
+    if (data.success && data.solicitudes.length > 0) {
+      contenedor.empty();
+
+      data.solicitudes.forEach(solicitud => {
+        const card = $("<div>").addClass("card mb-3");
+
+        const body = $("<div>").addClass("card-body");
+        $("<h5>").addClass("card-title").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Email:</strong> ${solicitud.email}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Presentación:</strong> ${solicitud.presentacion}`).appendTo(body);
+        if (solicitud.archivo) {
+          $("<p>").addClass("card-text").html(`<strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
+        }
+        $("<p>").addClass("card-text text-muted").text(`Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
+
+        const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
+        $("<button>").addClass("btn btn-success btn-sm").text("Aceptar").appendTo(acciones);
+        $("<button>").addClass("btn btn-danger btn-sm").text("Rechazar").appendTo(acciones);
+
+        body.append(acciones);
+        card.append(body);
+        contenedor.append(card);
+      });
+    } else {
+      contenedor.html("<p class='text-center text-light'>No hay solicitudes para esta oferta.</p>");
+    }
+  });
+}
+
 
 
 
