@@ -448,11 +448,27 @@ margin-left: 25% !important;
 .contenedor-solicitudes{
   margin-top: 50px !important;
 }
+/*estados*/
 .solicitud{
   background-color: #333333;
   border-color: #a8d8ea !important;
   width: 50% !important;
   margin-left: 25% !important;
+    color: white !important;
+}
+.aceptado{
+  background-color: #333333;
+  border-color: #66ff00 !important;
+  width: 50% !important;
+  margin-left: 25% !important;
+  color: white !important;
+}
+.rechazado{
+  background-color: #333333;
+  border-color: #ff0000 !important;
+  width: 50% !important;
+  margin-left: 25% !important;
+    color: white !important;
 }
 .bannersolicitud {
   background-image: url('source/img/mar2.jpg');

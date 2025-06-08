@@ -412,38 +412,39 @@ if (window.location.pathname.includes("solicitudes.html")) {
 
     if (data.success && data.solicitudes.length > 0) {
       contenedor.empty();
+data.solicitudes.forEach(solicitud => {
+  let borderClass = "border-primary";
+  if (solicitud.estado === "aceptado") borderClass = "border-success";
+  else if (solicitud.estado === "rechazado") borderClass = "border-danger";
 
-      data.solicitudes.forEach(solicitud => {
-        let borderClass = "border-primary"; // Por defecto
-        if (solicitud.estado === "aceptado") borderClass = "border-success";
-        else if (solicitud.estado === "rechazado") borderClass = "border-danger";
+  const card = $("<div>")
+    .addClass(`card shadow-sm mb-4 ${borderClass} solicitud`)
+    .attr("data-id", solicitud.id); // <- aquí lo insertas
+console.log("Solicitudes recibidas:", data.solicitudes);
 
-        const card = $("<div>").addClass(`card shadow-sm mb-4 ${borderClass} solicitud`);
+  const body = $("<div>").addClass("card-body");
 
-        const body = $("<div>").addClass("card-body");
+  $("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
+  $("<hr>").appendTo(body);
+  $("<p>").addClass("mb-1").html(`<i class="bi bi-telephone"></i> <strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
+  $("<p>").addClass("mb-1").html(`<i class="bi bi-envelope"></i> <strong>Email:</strong> ${solicitud.email}`).appendTo(body);
+  $("<p>").addClass("mb-1").html(`<i class="bi bi-person-lines-fill"></i> <strong>Presentación:</strong><br> ${solicitud.presentacion}`).appendTo(body);
 
-        $("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
+  if (solicitud.archivo) {
+    $("<p>").addClass("mb-1").html(`<i class="bi bi-paperclip"></i> <strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
+  }
 
-        $("<hr>").appendTo(body);
+  $("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
 
-        $("<p>").addClass("mb-1").html(`<i class="bi bi-telephone"></i> <strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
-        $("<p>").addClass("mb-1").html(`<i class="bi bi-envelope"></i> <strong>Email:</strong> ${solicitud.email}`).appendTo(body);
-        $("<p>").addClass("mb-1").html(`<i class="bi bi-person-lines-fill"></i> <strong>Presentación:</strong><br> ${solicitud.presentacion}`).appendTo(body);
+  const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
+  $("<button>").addClass("btn btn-outline-success btn-sm btn-aceptar").html('<i class="bi bi-check-circle"></i> Aceptar').appendTo(acciones);
+  $("<button>").addClass("btn btn-outline-danger btn-sm btn-rechazar").html('<i class="bi bi-x-circle"></i> Rechazar').appendTo(acciones);
 
-        if (solicitud.archivo) {
-          $("<p>").addClass("mb-1").html(`<i class="bi bi-paperclip"></i> <strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
-        }
+  body.append(acciones);
+  card.append(body);
+  contenedor.append(card);
+});
 
-        $("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
-
-        const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
-        $("<button>").addClass("btn btn-outline-success btn-sm btn-aceptar").html('<i class="bi bi-check-circle"></i> Aceptar').appendTo(acciones);
-        $("<button>").addClass("btn btn-outline-danger btn-sm btn-rechazar").html('<i class="bi bi-x-circle"></i> Rechazar').appendTo(acciones);
-
-        body.append(acciones);
-        card.append(body);
-        contenedor.append(card);
-      });
     } else {
       contenedor.html("<p class='text-center text-light'>No hay solicitudes para esta oferta.</p>");
     }
@@ -489,6 +490,35 @@ $("#filtro-provincia").on("change", function () {
     $("#filtro-ciudad").append(new Option(ciudad, ciudad));
   });
 });
+// Acciones de aceptar o rechazar solicitud
+$(document).on("click", ".btn-aceptar, .btn-rechazar", function () {
+  const boton = $(this);
+  const card = boton.closest(".card");
+  const solicitudId = card.attr("data-id");  // <-- cambia aquí
+  const nuevoEstado = boton.hasClass("btn-aceptar") ? "aceptado" : "rechazado";
+
+ console.log("Solicitud ID:", solicitudId, "| Estado:", nuevoEstado);
+
+  $.post("php/actualizar_estado.php", {
+    id: solicitudId,
+    estado: nuevoEstado
+  }, function (res) {
+    if (res.success) {
+      card.removeClass("border-primary border-success border-danger aceptado rechazado")
+          .addClass(`${nuevoEstado} ${nuevoEstado === "aceptado" ? "border-success" : "border-danger"}`);
+
+      card.find(".btn-aceptar, .btn-rechazar").remove();
+      card.find(".card-body").append(`<div class="mt-3 text-${nuevoEstado === "aceptado" ? "success" : "danger"} fw-bold">Solicitud ${nuevoEstado}</div>`);
+    } else {
+      alert("Error al actualizar el estado: " + res.message);
+    }
+  }, "json").fail(function (xhr, status, error) {
+    console.error("Fallo en AJAX:", xhr.responseText);
+  });
+});
+
+
+
 
 
 
@@ -545,10 +575,5 @@ function cargarOfertasFiltradas() {
 $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("change", function () {
   cargarOfertasFiltradas();
 });
-
-
-
-
-
 });//final del ready
 
