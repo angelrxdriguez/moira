@@ -372,12 +372,13 @@ if (window.location.pathname.includes("favorito.html")) {
   });
 }
 //servicio
-// Al hacer clic en "Ofrecer servicio"
 $(document).on("click", ".btn-ofrecer-servicio", function () {
   const ofertaId = $(this).data("id");
   $("#solicitud-oferta-id").val(ofertaId);
   $("#modalSolicitudServicio").modal("show");
 });
+// servicio
+
 $("#formSolicitudServicio").on("submit", function (e) {
   e.preventDefault();
 
@@ -396,6 +397,7 @@ $("#formSolicitudServicio").on("submit", function (e) {
     console.log("Detalles:", xhr.responseText);
   });
 });
+
 if (window.location.pathname.includes("solicitudes.html")) {
   const urlParams = new URLSearchParams(window.location.search);
   const ofertaId = urlParams.get("id");
@@ -412,21 +414,31 @@ if (window.location.pathname.includes("solicitudes.html")) {
       contenedor.empty();
 
       data.solicitudes.forEach(solicitud => {
-        const card = $("<div>").addClass("card mb-3");
+        let borderClass = "border-primary"; // Por defecto
+        if (solicitud.estado === "aceptado") borderClass = "border-success";
+        else if (solicitud.estado === "rechazado") borderClass = "border-danger";
+
+        const card = $("<div>").addClass(`card shadow-sm mb-4 ${borderClass} solicitud`);
 
         const body = $("<div>").addClass("card-body");
-        $("<h5>").addClass("card-title").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Email:</strong> ${solicitud.email}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Presentación:</strong> ${solicitud.presentacion}`).appendTo(body);
+
+        $("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
+
+        $("<hr>").appendTo(body);
+
+        $("<p>").addClass("mb-1").html(`<i class="bi bi-telephone"></i> <strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
+        $("<p>").addClass("mb-1").html(`<i class="bi bi-envelope"></i> <strong>Email:</strong> ${solicitud.email}`).appendTo(body);
+        $("<p>").addClass("mb-1").html(`<i class="bi bi-person-lines-fill"></i> <strong>Presentación:</strong><br> ${solicitud.presentacion}`).appendTo(body);
+
         if (solicitud.archivo) {
-          $("<p>").addClass("card-text").html(`<strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
+          $("<p>").addClass("mb-1").html(`<i class="bi bi-paperclip"></i> <strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
         }
-        $("<p>").addClass("card-text text-muted").text(`Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
+
+        $("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
 
         const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
-        $("<button>").addClass("btn btn-success btn-sm").text("Aceptar").appendTo(acciones);
-        $("<button>").addClass("btn btn-danger btn-sm").text("Rechazar").appendTo(acciones);
+        $("<button>").addClass("btn btn-outline-success btn-sm btn-aceptar").html('<i class="bi bi-check-circle"></i> Aceptar').appendTo(acciones);
+        $("<button>").addClass("btn btn-outline-danger btn-sm btn-rechazar").html('<i class="bi bi-x-circle"></i> Rechazar').appendTo(acciones);
 
         body.append(acciones);
         card.append(body);
@@ -437,6 +449,8 @@ if (window.location.pathname.includes("solicitudes.html")) {
     }
   });
 }
+
+//FILTROS
   // Cargar temas desde PHP
   $.getJSON("php/temas.php", function (temas) {
     temas.forEach(function (tema) {
@@ -514,10 +528,11 @@ function cargarOfertasFiltradas() {
         $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
         $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
 
-        const btnOfrecer = $("<button>")
-          .addClass("btn btn-primary w-100")
-          .text("Ofrecer servicio")
-          .attr("data-id", oferta.id);
+       const btnOfrecer = $("<button>")
+  .addClass("btn btn-primary w-100 btn-ofrecer-servicio") 
+  .text("Ofrecer servicio")
+  .attr("data-id", oferta.id);
+
 
         card.append(body).append(btnOfrecer);
         contenedor.append(card);

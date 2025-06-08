@@ -42,7 +42,7 @@ if ($res_usuario->num_rows !== 1) {
 }
 $id_usuario = $res_usuario->fetch_assoc()['id'];
 
-$stmt = $conn->prepare("INSERT INTO solicitudes_servicio (usuario_id, oferta_id, nombre, apellidos, telefono, email, presentacion, archivo, fecha_envio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+$stmt = $conn->prepare("INSERT INTO solicitudes_servicio (usuario_id, oferta_id, nombre, apellidos, telefono, email, presentacion, archivo, fecha_envio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'pendiente')");
 $stmt->bind_param("iissssss", $id_usuario, $oferta_id, $nombre, $apellidos, $telefono, $email, $presentacion, $archivo_ruta);
 
 if ($stmt->execute()) {
@@ -53,5 +53,4 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
-
 ?>
