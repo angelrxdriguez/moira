@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-06-2025 a las 23:20:02
+-- Tiempo de generación: 09-06-2025 a las 22:31:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,7 +39,7 @@ CREATE TABLE `favoritos` (
 --
 
 INSERT INTO `favoritos` (`id`, `usuario_id`, `oferta_id`, `fecha_marcado`) VALUES
-(23, 9, 4, '2025-06-03 23:15:53');
+(69, 11, 3, '2025-06-07 18:38:43');
 
 -- --------------------------------------------------------
 
@@ -79,6 +79,51 @@ INSERT INTO `ofertas` (`id`, `usuario_id`, `tema_id`, `subtema_id`, `titulo`, `d
 (4, 11, 3, 32, 'carpintero', 'ds', 'source/img/carpintero.jpg', 'Aragón', 'Teruel', 'Alcañiz', 'alcala de locuras', '2025-06-10', NULL, 'Por hora', 44.00, 'Efectivo', '2', 2, '2025-06-03 19:28:33'),
 (5, 11, 2, 22, 'Arreglar Urinario Averiado', '231312', 'source/img/ayuda.jpg', 'Ceuta', 'Ceuta', 'Ceuta', '32131', '2025-06-20', NULL, 'Por día', 44.00, 'A convenir', '666666666', 3, '2025-06-03 19:50:23'),
 (6, 11, 2, 22, 'carpintero', 'dasdadsdas', 'source/img/programador.jpg', 'Melilla', 'Melilla', 'Melilla', 'alcala de locuras', '2025-06-10', NULL, 'Por día', 44.00, 'Efectivo', '2', 2, '2025-06-03 20:10:35');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `resenas`
+--
+
+CREATE TABLE `resenas` (
+  `id` int(11) NOT NULL,
+  `reseñado_id` int(11) NOT NULL,
+  `autor_id` int(11) NOT NULL,
+  `valoracion` tinyint(4) NOT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `solicitudes_servicio`
+--
+
+CREATE TABLE `solicitudes_servicio` (
+  `id` int(11) NOT NULL,
+  `oferta_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `apellidos` varchar(150) NOT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `presentacion` text DEFAULT NULL,
+  `archivo` varchar(255) DEFAULT NULL,
+  `fecha_envio` datetime DEFAULT current_timestamp(),
+  `estado` enum('pendiente','aceptado','rechazado') DEFAULT 'pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `solicitudes_servicio`
+--
+
+INSERT INTO `solicitudes_servicio` (`id`, `oferta_id`, `usuario_id`, `nombre`, `apellidos`, `telefono`, `email`, `presentacion`, `archivo`, `fecha_envio`, `estado`) VALUES
+(1, 5, 9, 'dasda', 'Panadero Rodríguez', '666666666', 'prueba@prueba.prueba', 'edasdad', 'curriculum.pdf', '2025-06-07 17:04:17', 'pendiente'),
+(2, 3, 11, 'Angel', 'Panadero Rodríguez', '666666666', 'angelrobaliz@gmail.com', 'una conversación con este personaje es como:\r\n- El cielo es azul?\r\n- depende el día y la hora. \r\n- un martes a las 10 de la mañana, el cielo es azul?', '', '2025-06-07 18:39:31', 'aceptado'),
+(3, 3, 11, 'Angel', 'Panadero Rodríguez', '666666666', 'angelrobaliz@gmail.com', 'AYUDA NECESITO CHOLLO', 'curriculum.pdf', '2025-06-07 18:43:56', 'aceptado'),
+(4, 4, 9, 'pepe', 'padasda', '666666666', 'prueba@prueba.prueba', 'dasdasdas', 'curriculum.pdf', '2025-06-08 11:21:17', 'pendiente'),
+(5, 2, 11, 'Angel', 'Panadero Rodríguez', '666666666', 'angelrobaliz@gmail.com', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'curriculum.pdf', '2025-06-08 20:08:39', 'aceptado');
 
 -- --------------------------------------------------------
 
@@ -232,6 +277,22 @@ ALTER TABLE `ofertas`
   ADD KEY `subtema_id` (`subtema_id`);
 
 --
+-- Indices de la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reseñado_id` (`reseñado_id`),
+  ADD KEY `autor_id` (`autor_id`);
+
+--
+-- Indices de la tabla `solicitudes_servicio`
+--
+ALTER TABLE `solicitudes_servicio`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oferta_id` (`oferta_id`),
+  ADD KEY `usuario_id` (`usuario_id`);
+
+--
 -- Indices de la tabla `subtemas`
 --
 ALTER TABLE `subtemas`
@@ -259,13 +320,25 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `favoritos`
 --
 ALTER TABLE `favoritos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de la tabla `ofertas`
 --
 ALTER TABLE `ofertas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `solicitudes_servicio`
+--
+ALTER TABLE `solicitudes_servicio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `subtemas`
@@ -303,6 +376,20 @@ ALTER TABLE `ofertas`
   ADD CONSTRAINT `ofertas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `ofertas_ibfk_2` FOREIGN KEY (`tema_id`) REFERENCES `temas` (`id`),
   ADD CONSTRAINT `ofertas_ibfk_3` FOREIGN KEY (`subtema_id`) REFERENCES `subtemas` (`id`);
+
+--
+-- Filtros para la tabla `resenas`
+--
+ALTER TABLE `resenas`
+  ADD CONSTRAINT `resenas_ibfk_1` FOREIGN KEY (`reseñado_id`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `resenas_ibfk_2` FOREIGN KEY (`autor_id`) REFERENCES `usuarios` (`id`);
+
+--
+-- Filtros para la tabla `solicitudes_servicio`
+--
+ALTER TABLE `solicitudes_servicio`
+  ADD CONSTRAINT `solicitudes_servicio_ibfk_1` FOREIGN KEY (`oferta_id`) REFERENCES `ofertas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `solicitudes_servicio_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `subtemas`
