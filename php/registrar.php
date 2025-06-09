@@ -62,7 +62,7 @@ $mail->Body = "
     <p>Gracias por registrarte en Moira.</p>
     <p>Ya puedes acceder a tu cuenta. Trabaja Inteligente y pidete un Moira!</p>
     <br>
-    <img src='cid:logo_moira' alt='Moira Logo' style='width:150px;'>
+    <img src='cid:logo_moira' alt='Moira Logo' style='width:350px;'>
     <p>Un saludo,<br>El equipo de Moira</p>
 ";
 

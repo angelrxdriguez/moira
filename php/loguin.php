@@ -28,10 +28,10 @@ $resultado = $stmt->get_result();
 if ($resultado->num_rows === 1) {
     $fila = $resultado->fetch_assoc();
     
-    if ($fila['contrasena'] === $contra) {
-   $_SESSION['usuario'] = $fila['usuario'];
-$_SESSION['email'] = $email;
-
+if ($fila['contrasena'] === $contra) {
+    $_SESSION['usuario'] = $fila['usuario'];
+    $_SESSION['email'] = $email;
+    $_SESSION['usuario_id'] = $fila['id']; // <-- ¡IMPORTANTE!
 
     echo json_encode([
         "success" => true,
@@ -40,6 +40,7 @@ $_SESSION['email'] = $email;
         "email" => $email
     ]);
 }
+
 else {
         echo json_encode(["success" => false, "message" => "Contraseña incorrecta"]);
     }

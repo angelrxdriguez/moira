@@ -413,12 +413,12 @@ if (window.location.pathname.includes("solicitudes.html")) {
     if (data.success && data.solicitudes.length > 0) {
       contenedor.empty();
 data.solicitudes.forEach(solicitud => {
-  let borderClass = "border-primary";
-  if (solicitud.estado === "aceptado") borderClass = "border-success";
-  else if (solicitud.estado === "rechazado") borderClass = "border-danger";
+  let estadoClass = "solicitud"; // por defecto
+if (solicitud.estado === "aceptado") estadoClass = "aceptado";
+else if (solicitud.estado === "rechazado") estadoClass = "rechazado";
 
-  const card = $("<div>")
-    .addClass(`card shadow-sm mb-4 ${borderClass} solicitud`)
+const card = $("<div>")
+  .addClass(`card shadow-sm mb-4 ${estadoClass}`)
     .attr("data-id", solicitud.id); // <- aquí lo insertas
 console.log("Solicitudes recibidas:", data.solicitudes);
 
@@ -436,9 +436,30 @@ console.log("Solicitudes recibidas:", data.solicitudes);
 
   $("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
 
-  const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
-  $("<button>").addClass("btn btn-outline-success btn-sm btn-aceptar").html('<i class="bi bi-check-circle"></i> Aceptar').appendTo(acciones);
-  $("<button>").addClass("btn btn-outline-danger btn-sm btn-rechazar").html('<i class="bi bi-x-circle"></i> Rechazar').appendTo(acciones);
+const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
+
+if (solicitud.estado === "pendiente") {
+  $("<button>").addClass("btn btn-outline-success btn-sm btn-aceptar")
+    .html('<i class="bi bi-check-circle"></i> Aceptar')
+    .appendTo(acciones);
+
+  $("<button>").addClass("btn btn-outline-danger btn-sm btn-rechazar")
+    .html('<i class="bi bi-x-circle"></i> Rechazar')
+    .appendTo(acciones);
+} else if (solicitud.estado === "rechazado") {
+  const mensajeEstado = $("<div>")
+    .addClass("mt-3 fw-bold text-danger")
+    .text("Solicitud rechazada");
+  acciones.append(mensajeEstado);
+} else if (solicitud.estado === "aceptado") {
+  const btnFinalizado = $("<button>")
+    .addClass("btn btn-sm btn-outline-light btn-finalizado mt-3")
+    .html('<i class="bi bi-x-diamond"></i> Finalizado');
+  acciones.append(btnFinalizado);
+}
+
+
+
 
   body.append(acciones);
   card.append(body);
@@ -508,7 +529,7 @@ $(document).on("click", ".btn-aceptar, .btn-rechazar", function () {
           .addClass(`${nuevoEstado} ${nuevoEstado === "aceptado" ? "border-success" : "border-danger"}`);
 
       card.find(".btn-aceptar, .btn-rechazar").remove();
-      card.find(".card-body").append(`<div class="mt-3 text-${nuevoEstado === "aceptado" ? "success" : "danger"} fw-bold">Solicitud ${nuevoEstado}</div>`);
+      //card.find(".card-body").append(`<div class="mt-3 text-${nuevoEstado === "aceptado" ? "success" : "danger"} fw-bold">Solicitud ${nuevoEstado}</div>`);
     } else {
       alert("Error al actualizar el estado: " + res.message);
     }
@@ -577,3 +598,53 @@ $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("chan
 });
 });//final del ready
 
+// Crear estrellas dinámicamente
+function renderizarEstrellas(valorActual = 0) {
+  const contenedor = $("#estrellas");
+  contenedor.empty();
+  for (let i = 1; i <= 5; i++) {
+    const estrella = $("<i>")
+      .addClass("bi bi-star-fill mx-1")
+      .css("cursor", "pointer")
+      .toggleClass("text-warning", i <= valorActual)
+      .attr("data-valor", i);
+    contenedor.append(estrella);
+  }
+  $("#resenaValor").val(valorActual);
+  $("#btnConfirmarResena").prop("disabled", valorActual === 0);
+}
+
+// Click en botón finalizado
+$(document).on("click", ".btn-finalizado", function () {
+  const reseñadoId = $(this).closest(".card").attr("data-id");
+  $("#resenaDestino").val(reseñadoId);
+  renderizarEstrellas(0); // Reset
+  $("#modalResena").modal("show");
+});
+
+// Click en estrella
+$(document).on("click", "#estrellas i", function () {
+  const valor = $(this).data("valor");
+  renderizarEstrellas(valor);
+});
+
+// Enviar reseña
+$("#btnConfirmarResena").on("click", function () {
+  const valoracion = $("#resenaValor").val();
+  const reseñado_id = $("#resenaDestino").val();
+
+  $.post("php/guardar_resena.php", {
+    valoracion,
+    reseñado_id
+  }, function (res) {
+    if (res.success) {
+      alert("¡Reseña enviada correctamente!");
+      $("#modalResena").modal("hide");
+    } else {
+      alert("Error al guardar la reseña: " + res.message);
+    }
+  }, "json").fail(function (xhr) {
+    console.error("Error en el servidor:", xhr.responseText);
+    alert("Fallo al enviar reseña.");
+  });
+});
