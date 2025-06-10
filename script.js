@@ -647,9 +647,7 @@ $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("chan
 });
 if (window.location.pathname.includes("favorito.html")) {
   const contenedor = $(".favs");
-
-  // Verificamos si hay sesión (ejemplo básico con sessionStorage/localStorage o podrías hacerlo vía AJAX al servidor)
-  const emailSesion = sessionStorage.getItem("email"); // o localStorage.getItem()
+  const emailSesion = sessionStorage.getItem("email");
 
   if (!emailSesion) {
     contenedor.html(`
@@ -661,23 +659,56 @@ if (window.location.pathname.includes("favorito.html")) {
     return;
   }
 
-  // Simulamos obtener favoritos del localStorage o puedes reemplazarlo por un fetch a tu backend
-  const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+  $.get("php/obtener_favoritos.php", function (res) {
+    if (!res.success || res.favoritos.length === 0) {
+      contenedor.html(`
+        <div class="text-center text-light mt-5">
+          <h4>No tienes ninguna oferta en favoritos</h4>
+          <p>Ve a <a href="demandar.html" class="text-primary">buscar ofertas</a> para añadir algunas.</p>
+        </div>
+      `);
+      return;
+    }
 
-  if (favoritos.length === 0) {
-    contenedor.html(`
-      <div class="text-center text-light mt-5">
-        <h4>No tienes ninguna oferta en favoritos</h4>
-        <p>Ve a <a href="demandar.html" class="text-primary">buscar ofertas</a> para añadir algunas.</p>
-      </div>
-    `);
-  } else {
-    // Aquí deberías hacer una llamada AJAX para obtener los detalles de las ofertas favoritas
-    // por ejemplo usando `fetch` o `$.get()` enviando el array `favoritos`
-    contenedor.html("<p class='text-white'>Cargando tus favoritos...</p>");
-    // Luego llenas con las tarjetas
-  }
+    const favoritosIds = res.favoritos.join(",");
+
+    $.get(`php/detalles_favoritos.php?ids=${favoritosIds}`, function (data) {
+      if (!data.success || data.ofertas.length === 0) {
+        contenedor.html("<p class='text-light'>No se pudieron cargar los detalles de tus favoritos.</p>");
+        return;
+      }
+
+      contenedor.empty();
+      data.ofertas.forEach(oferta => {
+        const card = $("<div>").addClass("card mb-3 fav position-relative");
+        const body = $("<div>").addClass("card-body");
+
+        if (oferta.imagen) {
+          $("<img>")
+            .addClass("img-fluid rounded mb-3 oferta-img-mini")
+            .attr("src", oferta.imagen)
+            .attr("alt", "Imagen oferta")
+            .appendTo(body);
+        }
+
+        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+
+        const btnOfrecer = $("<button>")
+          .addClass("btn btn-primary w-100 btn-ofrecer-servicio")
+          .text("Ofrecer servicio")
+          .attr("data-id", oferta.id);
+
+        card.append(body).append(btnOfrecer);
+        contenedor.append(card);
+      });
+    }, "json");
+  }, "json");
 }
+
 
 });//final del ready
 
