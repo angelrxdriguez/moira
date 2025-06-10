@@ -419,7 +419,9 @@ else if (solicitud.estado === "rechazado") estadoClass = "rechazado";
 
 const card = $("<div>")
   .addClass(`card shadow-sm mb-4 ${estadoClass}`)
-    .attr("data-id", solicitud.id); // <- aquí lo insertas
+  .attr("data-id", solicitud.id)
+.attr("data-reseñado", solicitud.usuario_id); // <- asegúrate de tener este dato
+
 console.log("Solicitudes recibidas:", data.solicitudes);
 
   const body = $("<div>").addClass("card-body");
@@ -616,7 +618,7 @@ function renderizarEstrellas(valorActual = 0) {
 
 // Click en botón finalizado
 $(document).on("click", ".btn-finalizado", function () {
-  const reseñadoId = $(this).closest(".card").attr("data-id");
+  const reseñadoId = $(this).closest(".card").attr("data-reseñado");
   $("#resenaDestino").val(reseñadoId);
   renderizarEstrellas(0); // Reset
   $("#modalResena").modal("show");
