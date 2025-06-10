@@ -314,6 +314,17 @@ width: 50%;
 margin-left: 25%;
 font-size: 130%;
 }
+.btn.btn-primary.masoferta{
+background-color: #a8d8ea !important;
+color: #111111;
+border: none;
+width: 50%;
+margin-left: 25%;
+font-size: 130%;
+}
+.btn.btn-primary.masoferta:hover{
+background-color: #b8ecff !important;
+}
 .banneroferta {
   background-image: url('source/img/ayuda.jpg');
   background-size: cover;
