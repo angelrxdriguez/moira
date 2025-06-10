@@ -317,11 +317,12 @@ $(document).on("click", ".btn-like", function () {
 
   $.post("php/guardar_favorito.php", { oferta_id: ofertaId }, function (res) {
     if (res.success) {
-      if (res.action === "added") {
-        btn.removeClass("btn-outline-danger").addClass("btn-danger text-white active");
-      } else if (res.action === "removed") {
-        btn.removeClass("btn-danger text-white active").addClass("btn-outline-danger");
-      }
+     if (res.action === "added") {
+  btn.removeClass("btn-like-inactivo").addClass("btn-like-activo");
+} else if (res.action === "removed") {
+  btn.removeClass("btn-like-activo").addClass("btn-like-inactivo");
+}
+
     } else {
       alert("Error: " + res.message);
     }
@@ -330,6 +331,7 @@ $(document).on("click", ".btn-like", function () {
   });
 });
 //favorito html
+/*
 if (window.location.pathname.includes("favorito.html")) {
   $.get("php/favoritos_usuario.php", function (data) {
     const contenedor = $(".favs");
@@ -370,7 +372,7 @@ if (window.location.pathname.includes("favorito.html")) {
       contenedor.html("<p class='text-center text-muted'>No tienes ofertas marcadas como favoritas.</p>");
     }
   });
-}
+}*/
 //servicio
 $(document).on("click", ".btn-ofrecer-servicio", function () {
   const ofertaId = $(this).data("id");
@@ -413,6 +415,7 @@ if (window.location.pathname.includes("solicitudes.html")) {
     if (data.success && data.solicitudes.length > 0) {
       contenedor.empty();
 data.solicitudes.forEach(solicitud => {
+  
   let estadoClass = "solicitud"; // por defecto
 if (solicitud.estado === "aceptado") estadoClass = "aceptado";
 else if (solicitud.estado === "rechazado") estadoClass = "rechazado";
@@ -424,19 +427,39 @@ const card = $("<div>")
 
 console.log("Solicitudes recibidas:", data.solicitudes);
 
-  const body = $("<div>").addClass("card-body");
+const body = $("<div>").addClass("card-body");
 
-  $("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
-  $("<hr>").appendTo(body);
-  $("<p>").addClass("mb-1").html(`<i class="bi bi-telephone"></i> <strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
-  $("<p>").addClass("mb-1").html(`<i class="bi bi-envelope"></i> <strong>Email:</strong> ${solicitud.email}`).appendTo(body);
-  $("<p>").addClass("mb-1").html(`<i class="bi bi-person-lines-fill"></i> <strong>Presentación:</strong><br> ${solicitud.presentacion}`).appendTo(body);
+$("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
+$("<hr>").appendTo(body);
+$("<p>").addClass("mb-1").html(`<i class="bi bi-telephone"></i> <strong>Teléfono:</strong> ${solicitud.telefono}`).appendTo(body);
+$("<p>").addClass("mb-1").html(`<i class="bi bi-envelope"></i> <strong>Email:</strong> ${solicitud.email}`).appendTo(body);
+$("<p>").addClass("mb-1").html(`<i class="bi bi-person-lines-fill"></i> <strong>Presentación:</strong><br> ${solicitud.presentacion}`).appendTo(body);
 
-  if (solicitud.archivo) {
-    $("<p>").addClass("mb-1").html(`<i class="bi bi-paperclip"></i> <strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
+if (solicitud.archivo) {
+  $("<p>").addClass("mb-1").html(`<i class="bi bi-paperclip"></i> <strong>Archivo:</strong> <a href="data/${solicitud.archivo}" target="_blank">${solicitud.archivo}</a>`).appendTo(body);
+}
+
+$("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
+
+const pValoracion = $("<p>").addClass("mb-1 text-warning small").text("Valoración media: cargando...");
+body.append(pValoracion);
+
+$.get("php/media_resenas.php", { id: solicitud.usuario_id }, function (res) {
+  if (res.success) {
+    const estrellas = Math.round(res.media);
+let estrellasHTML = "Valoración media: ";
+for (let i = 0; i < estrellas; i++) {
+  estrellasHTML += "<i class='bi bi-star-fill text-warning'></i>";
+}
+for (let i = estrellas; i < 5; i++) {
+  estrellasHTML += "<i class='bi bi-star text-warning'></i>";
+}
+pValoracion.html(estrellasHTML);
+
+  } else {
+    pValoracion.text("Valoración media: no disponible");
   }
-
-  $("<p>").addClass("text-light small mt-2").html(`<i class="bi bi-clock"></i> Enviado el: ${solicitud.fecha_envio}`).appendTo(body);
+});
 
 const acciones = $("<div>").addClass("d-flex justify-content-end gap-2 mt-3");
 
@@ -557,47 +580,105 @@ function cargarOfertasFiltradas() {
     ciudad: $("#filtro-ciudad").val()
   };
 
-  $.get("php/ofertas_demanda.php", filtros, function (data) {
-    const contenedor = $(".demandas");
-    contenedor.empty();
+  const contenedor = $(".demandas");
+  contenedor.empty();
 
-    if (data.success && data.ofertas.length > 0) {
-      data.ofertas.forEach(function (oferta) {
-        const card = $("<div>").addClass("card mb-3 demanda position-relative");
+  const emailSesion = sessionStorage.getItem("email");
+  if (!emailSesion) {
+    contenedor.html("<p class='text-center text-light'>Inicia sesión para ver tus favoritos.</p>");
+    return;
+  }
 
-        const body = $("<div>").addClass("card-body");
-
-        if (oferta.imagen) {
-          $("<img>")
-            .addClass("img-fluid rounded mb-3")
-            .attr("src", oferta.imagen)
-            .attr("alt", "Imagen oferta")
-            .appendTo(body);
-        }
-
-        $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
-        $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
-        $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
-
-       const btnOfrecer = $("<button>")
-  .addClass("btn btn-primary w-100 btn-ofrecer-servicio") 
-  .text("Ofrecer servicio")
-  .attr("data-id", oferta.id);
-
-
-        card.append(body).append(btnOfrecer);
-        contenedor.append(card);
-      });
-    } else {
-      contenedor.html("<p class='text-center text-muted'>No hay ofertas que coincidan con los filtros.</p>");
+  // 1. Cargar favoritos del usuario desde el backend
+  $.get("php/favoritos_usuario.php", function (favoritosData) {
+    if (!favoritosData.success) {
+      contenedor.html("<p class='text-center text-light'>Error al cargar favoritos.</p>");
+      return;
     }
+
+    const favoritosIds = favoritosData.ofertas.map(o => o.id); // ← asumimos que devuelves id de oferta
+
+    // 2. Obtener todas las ofertas filtradas
+    $.get("php/ofertas_demanda.php", filtros, function (data) {
+      if (data.success && data.ofertas.length > 0) {
+        data.ofertas.forEach(function (oferta) {
+          const card = $("<div>").addClass("card mb-3 demanda position-relative");
+          const body = $("<div>").addClass("card-body");
+
+          if (oferta.imagen) {
+            $("<img>")
+              .addClass("img-fluid rounded mb-3")
+              .attr("src", oferta.imagen)
+              .attr("alt", "Imagen oferta")
+              .appendTo(body);
+          }
+
+          $("<h5>").addClass("card-title").text(oferta.titulo).appendTo(body);
+          $("<p>").addClass("card-text").text(oferta.descripcion).appendTo(body);
+          $("<p>").addClass("card-text").html(`<strong>Ubicación:</strong> ${oferta.ciudad}, ${oferta.provincia}, ${oferta.comunidad}`).appendTo(body);
+          $("<p>").addClass("card-text").html(`<strong>Fechas:</strong> ${oferta.fecha_inicio} - ${oferta.fecha_fin}`).appendTo(body);
+          $("<p>").addClass("card-text").html(`<strong>Pago:</strong> ${oferta.cantidad} € (${oferta.tipo_pago})`).appendTo(body);
+
+          const btnOfrecer = $("<button>")
+            .addClass("btn btn-primary w-100 btn-ofrecer-servicio")
+            .text("Ofrecer servicio")
+            .attr("data-id", oferta.id);
+
+          const esFavorito = favoritosIds.includes(oferta.id);
+          const btnLike = $("<button>")
+            .addClass("btn btn-like-custom position-absolute top-0 end-0 m-2 btn-like")
+            .addClass(esFavorito ? "btn-like-activo" : "btn-like-inactivo")
+            .attr("data-id", oferta.id)
+            .html('<i class="bi bi-heart-fill"></i>');
+
+          card.append(body).append(btnOfrecer).append(btnLike);
+          contenedor.append(card);
+        });
+      } else {
+        contenedor.html("<p class='text-center text-muted'>No hay ofertas que coincidan con los filtros.</p>");
+      }
+    }, "json");
+
   }, "json");
 }
+
 $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("change", function () {
   cargarOfertasFiltradas();
 });
+if (window.location.pathname.includes("favorito.html")) {
+  const contenedor = $(".favs");
+
+  // Verificamos si hay sesión (ejemplo básico con sessionStorage/localStorage o podrías hacerlo vía AJAX al servidor)
+  const emailSesion = sessionStorage.getItem("email"); // o localStorage.getItem()
+
+  if (!emailSesion) {
+    contenedor.html(`
+      <div class="text-center text-light mt-5">
+        <h4>No tienes ninguna oferta en favoritos</h4>
+        <p>Inicia sesión o <a href="demandar.html" class="text-primary">explora ofertas</a></p>
+      </div>
+    `);
+    return;
+  }
+
+  // Simulamos obtener favoritos del localStorage o puedes reemplazarlo por un fetch a tu backend
+  const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+  if (favoritos.length === 0) {
+    contenedor.html(`
+      <div class="text-center text-light mt-5">
+        <h4>No tienes ninguna oferta en favoritos</h4>
+        <p>Ve a <a href="demandar.html" class="text-primary">buscar ofertas</a> para añadir algunas.</p>
+      </div>
+    `);
+  } else {
+    // Aquí deberías hacer una llamada AJAX para obtener los detalles de las ofertas favoritas
+    // por ejemplo usando `fetch` o `$.get()` enviando el array `favoritos`
+    contenedor.html("<p class='text-white'>Cargando tus favoritos...</p>");
+    // Luego llenas con las tarjetas
+  }
+}
+
 });//final del ready
 
 // Crear estrellas dinámicamente

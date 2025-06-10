@@ -448,6 +448,18 @@ margin-left: 25% !important;
 .contenedor-solicitudes{
   margin-top: 50px !important;
 }
+.btn-like-activo {
+  background-color: #a8d8ea;
+  color: white;
+}
+
+.btn-like-inactivo {
+  background-color: transparent;
+  color: #a8d8ea;
+  border: 1px solid #a8d8ea;
+}
+
+
 /*estados*/
 .solicitud{
   background-color: #333333;
