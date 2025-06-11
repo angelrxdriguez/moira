@@ -39,41 +39,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssss", $usuario, $email, $contra, $fechaNacimiento);
 
     if ($stmt->execute()) {
-        // Envío de correo con PHPMailer
-        $mail = new PHPMailer(true);
-        try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'panaderorodriguezangel.sangrina@gmail.com';
-            $mail->Password = 'mljq nlhv kzcw vwgh';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+    // Guardar log de registro
+    $logMsg = "[" . date("Y-m-d H:i:s") . "] Registro exitoso: Usuario '$usuario' con email '$email'\n";
+    file_put_contents("../logs/registro.log", $logMsg, FILE_APPEND);
 
-            $mail->setFrom('panaderorodriguezangel.sangrina@gmail.com', 'Equipo Moira');
-            $mail->addAddress($email, $usuario);
+    // Envío de correo con PHPMailer
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'panaderorodriguezangel.sangrina@gmail.com';
+        $mail->Password = 'mljq nlhv kzcw vwgh';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-            $mail->isHTML(true);
-            $mail->Subject = 'Bienvenido a Moira';
+        $mail->setFrom('panaderorodriguezangel.sangrina@gmail.com', 'Equipo Moira');
+        $mail->addAddress($email, $usuario);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Bienvenido a Moira';
         $mail->AddEmbeddedImage('../source/img/moira-logo2.png', 'logo_moira');
 
-$mail->Body = "
-    <h3>Hola <b>$usuario</b>,</h3>
-    <p>Gracias por registrarte en Moira.</p>
-    <p>Ya puedes acceder a tu cuenta. Trabaja Inteligente y pidete un Moira!</p>
-    <br>
-    <img src='cid:logo_moira' alt='Moira Logo' style='width:350px;'>
-    <p>Un saludo,<br>El equipo de Moira</p>
-";
+        $mail->Body = "
+            <h3>Hola <b>$usuario</b>,</h3>
+            <p>Gracias por registrarte en Moira.</p>
+            <p>Ya puedes acceder a tu cuenta. ¡Trabaja Inteligente y pide un Moira!</p>
+            <br>
+            <img src='cid:logo_moira' alt='Moira Logo' style='width:350px;'>
+            <p>Un saludo,<br>El equipo de Moira</p>
+        ";
 
+        $mail->send();
+    } catch (Exception $e) {
+        // Puedes hacer log de error si lo deseas también
+    }
 
-            $mail->send();
-        } catch (Exception $e) {
-        }
-
-        header("Location: ../sesion.html?registro=exito");
-        exit();
-    } else {
+    header("Location: ../sesion.html?registro=exito");
+    exit();
+}
+ else {
         echo "Error al registrar: " . $stmt->error;
     }
 

@@ -71,17 +71,20 @@
         <div class="mb-3 registro">
           <label for="contra" class="form-label">Contraseña</label>
           <input type="password" class="form-control" id="contra" name="contra" placeholder="Contraseña" required>
+            <p id="error-contra" class="text-danger small mt-1 d-none"></p>
         </div>
 
         <div class="mb-3 registro">
           <label for="repiteContra" class="form-label">Repetir Contraseña</label>
           <input type="password" class="form-control" id="repiteContra" name="repiteContra"
             placeholder="Repite la contraseña" required>
+            <p id="error-repite" class="text-danger small mt-1 d-none"></p>
         </div>
 
         <div class="mb-3 registro">
           <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
           <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+            <p id="error-fecha" class="text-danger small mt-1 d-none"></p>
         </div>
 
         <p>¿Ya tienes una cuenta? <a href="sesion.html" class="pasarela-sesion">Iniciar sesión.</a></p>
@@ -154,6 +157,49 @@
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  document.querySelector('.form-sesion').addEventListener('submit', function (e) {
+    let valido = true;
+
+    // Limpiar errores anteriores
+    document.querySelectorAll(".text-danger").forEach(el => {
+      el.classList.add("d-none");
+      el.textContent = "";
+    });
+
+    const password = document.getElementById('contra').value.trim();
+    const repetir = document.getElementById('repiteContra').value.trim();
+    const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+
+    // Validar contraseña
+    if (password.length < 5) {
+      const error = document.getElementById('error-contra');
+      error.textContent = "La contraseña debe tener al menos 5 caracteres.";
+      error.classList.remove("d-none");
+      valido = false;
+    }
+
+    if (password !== repetir) {
+      const error = document.getElementById('error-repite');
+      error.textContent = "Las contraseñas no coinciden.";
+      error.classList.remove("d-none");
+      valido = false;
+    }
+
+    const fechaMaxima = new Date("2007-12-31");
+    const fechaUsuario = new Date(fechaNacimiento);
+
+    if (fechaUsuario > fechaMaxima) {
+      const error = document.getElementById('error-fecha');
+      error.textContent = "Has de ser mayor de 16 años.";
+      error.classList.remove("d-none");
+      valido = false;
+    }
+
+    if (!valido) e.preventDefault();
+  });
+</script>
+
 
   <script src="script.js"></script>
 <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
