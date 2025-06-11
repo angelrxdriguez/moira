@@ -48,31 +48,44 @@
       </div>
     </div>
   </nav>
-<div class="video-container">
+<div class="video-container position-relative">
   <video autoplay muted loop playsinline>
     <source src="source/video/fondo-nino.mp4" type="video/mp4">
     Tu navegador no soporta el video en HTML5.
   </video>
   <div class="video-overlay"></div>
-</div>
 
-  <div class="info d-flex justify-content-center align-items-center text-center">
-    <div class="info-box me-4">
-      <h2>¿Buscas trabajo?</h2>
-      <p>Encuentra oportunidades temporales cerca de ti.</p>
-      <a class="acceso" href="demandar.html">Demandar</a>
+<div class="info text-center">
+  <div class="row justify-content-center align-items-stretch m-0">
+    <div class="col-12 col-md-5 mb-4 mb-md-0 d-flex">
+      <div class="info-box d-flex flex-column justify-content-between w-100">
+        <div>
+          <h2>¿Buscas trabajo?</h2>
+          <p>Encuentra oportunidades temporales cerca de ti.</p>
+        </div>
+        <a class="acceso mt-3" href="demandar.html">Demandar</a>
+      </div>
     </div>
-    <div class="info-box ms-4">
-      <h2>¿Ofreces empleo?</h2>
-      <p>Publica ofertas fácilmente y encuentra trabajadores disponibles.</p>
-      <a class="acceso" href="ofertar.html">Ofertar</a>
+    <div class="col-12 col-md-5 d-flex">
+      <div class="info-box d-flex flex-column justify-content-between w-100">
+        <div>
+          <h2>¿Ofreces empleo?</h2>
+          <p>Publica ofertas fácilmente y encuentra trabajadores disponibles.</p>
+        </div>
+        <a class="acceso mt-3" href="ofertar.html">Ofertar</a>
+      </div>
     </div>
   </div>
+</div>
+
+</div>
+
+
 <div class="container my-5">
   <div class="row text-center">
 
     <div class="col-md-4 mb-4">
-      <a href="ofertar.html" class="text-decoration-none text-light d-block h-100">
+      <a href="ofertar.html" class="text-decoration-none text-light d-block h-100 pre">
         <img src="icon/dar.png" alt="Ofrecer empleo" class="img-fluid mb-3" style="max-height: 80px;">
         <h5 class="fw-bold">Ofrece Empleo</h5>
         <p>Publica ofertas laborales fácilmente y encuentra profesionales dispuestos a colaborar contigo.</p>
@@ -80,7 +93,7 @@
     </div>
 
     <div class="col-md-4 mb-4">
-      <a href="demandar.html" class="text-decoration-none text-light d-block h-100">
+      <a href="demandar.html" class="text-decoration-none text-light d-block h-100 pre">
         <img src="icon/ver-lista.png" alt="Buscar empleo" class="img-fluid mb-3" style="max-height: 80px;">
         <h5 class="fw-bold">Busca Trabajo</h5>
         <p>Explora oportunidades laborales cerca de ti y postúlate con un solo clic.</p>
@@ -88,7 +101,7 @@
     </div>
 
     <div class="col-md-4 mb-4">
-      <a href="sesion.html" class="text-decoration-none text-light d-block h-100">
+      <a href="sesion.html" class="text-decoration-none text-light d-block h-100 pre">
         <img src="icon/buena-resena.png" alt="Reseñas" class="img-fluid mb-3" style="max-height: 80px;">
         <h5 class="fw-bold">Deja Reseñas</h5>
         <p>Valora tus experiencias laborales y ayuda a mejorar la comunidad Moira.</p>
@@ -133,29 +146,24 @@
           </div>
         </div>
       </section>
-      <section class="text-center mb-5">
-        <a href="https://x.com/i/flow/login?redirect_after_login=%2Fjarfaiter_dice" class="text-white me-4">
-          <img src="iconos/twitter (1).png" alt="" class="iconofooter">
-        </a>
-        <a href="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2Fjarfaiter%2F%3Flocale%3Des_ES" class="text-white me-4">
-            <img src="iconos/facebook (1).png" alt="" class="iconofooter">
-        </a>
-        <a href="https://www.youtube.com/channel/UCUCxEgrssyvszRfaLBmFxhA" class="text-white me-4">
-            <img src="iconos/youtube (1).png" alt="" class="iconofooter">
-        </a>
-        <a href="https://www.instagram.com/jarfaiterlc/?hl=es" class="text-white me-4">
-            <img src="iconos/instagram (1).png" alt="" class="iconofooter">
-        </a>
-        <a href="https://open.spotify.com/intl-es/artist/7hqwOMu222wUGHIzm49sJk#login" class="text-white me-4">
-            <img src="iconos/spotify (1).png" alt="" class="iconofooter">
-        </a>
-        <a href="https://soundcloud.com/jarfaiter" class="text-white me-4">
-            <img src="iconos/soundcloud-logo (1).png" alt="" class="iconofooter">
-        </a>
-      </section>
+  <section class="text-center mb-5">
+  <a href="https://x.com/i/flow/login?redirect_after_login=%2Fjarfaiter_dice" class="text-info fs-4 me-4">
+    <i class="bi bi-twitter"></i>
+  </a>
+  <a href="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2Fjarfaiter%2F%3Flocale%3Des_ES" class="text-info fs-4 me-4">
+    <i class="bi bi-facebook"></i>
+  </a>
+  <a href="https://www.youtube.com/channel/UCUCxEgrssyvszRfaLBmFxhA" class="text-info fs-4 me-4">
+    <i class="bi bi-youtube"></i>
+  </a>
+  <a href="https://www.instagram.com/jarfaiterlc/?hl=es" class="text-info fs-4 me-4">
+    <i class="bi bi-instagram"></i>
+  </a>
+</section>
+
     </div>
     <div
-         class="text-center p-3"
+         class="text-center p-3 text-info"
          >
       © 2025 Copyright:
       <a class="text-white" href="contacto.html"
