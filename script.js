@@ -9,16 +9,22 @@ $('.form-log').on('submit', function (e) {
     const data = JSON.parse(res);
 
     if (data.success) {
- sessionStorage.setItem('usuario', data.usuario);
-sessionStorage.setItem('email', data.email);
-  window.location.href = 'perfil.html';
+      sessionStorage.setItem('usuario', data.usuario);
+      sessionStorage.setItem('email', data.email);
 
-}
- else {
+      // Redirección especial si es el admin
+      if (data.email === 'admin@admin.admin' && contra === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'perfil.html';
+      }
+
+    } else {
       alert(data.message);
     }
   });
 });
+
 $("#formCrearOferta").on("submit", function (e) {
   e.preventDefault();
 
