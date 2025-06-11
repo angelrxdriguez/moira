@@ -190,6 +190,11 @@ background-color: #a8d8ea;
 .btn.btn-primary.sesion:hover{
   background-color: #c2efff;
 }
+/*perfil*/
+#perfil-valoracion{
+font-size: 120%;
+color: #a8d8ea !important;
+}
 /*OFERTAR*/
 .misofertas{
   color: white !important;

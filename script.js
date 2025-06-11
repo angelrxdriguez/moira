@@ -137,24 +137,47 @@ $('#tema').on('change', function () {
   //perfil.html lo metí en script sino bug
     // Verificar si hay sesión
     // Solo redirige en perfil.html si no hay sesión
-if (window.location.pathname.includes("perfil.html")) {
-    const usuario = sessionStorage.getItem("usuario");
-    const email = sessionStorage.getItem("email");
+if (window.location.pathname.includes("perfil.html")) { 
+  const usuario = sessionStorage.getItem("usuario");
+  const email = sessionStorage.getItem("email");
 
-    if (!usuario) {
-      window.location.href = "sesion.html";
-    } else {
-      $("#perfil-nombre").text(usuario);
-      $("#perfil-email").text(email ?? "(sin correo)");
-    }
+  if (!usuario) {
+    window.location.href = "sesion.html";
+  } else {
+    $("#perfil-nombre").text(usuario);
+    $("#perfil-email").text(email ?? "(sin correo)");
 
-    $(".cerrar-sesion").on("click", function () {
-      $.get("php/logout.php", function () {
-        sessionStorage.clear();
-        window.location.href = "index.html";
-      });
+    // Obtener valoración y renderizar estrellas
+    $.get("php/obtener_valoracion_usuario.php", function (res) {
+      const pValoracion = $("#perfil-valoracion");
+
+      if (res.success) {
+        const estrellas = Math.round(res.media);
+        let estrellasHTML = "Valoración media: ";
+
+        for (let i = 0; i < estrellas; i++) {
+          estrellasHTML += "<i class='bi bi-star-fill text-warning'></i>";
+        }
+        for (let i = estrellas; i < 5; i++) {
+          estrellasHTML += "<i class='bi bi-star text-warning'></i>";
+        }
+
+        pValoracion.html(estrellasHTML);
+      } else {
+        pValoracion.text("Valoración media: no disponible");
+      }
     });
   }
+
+  $(".cerrar-sesion").on("click", function () {
+    $.get("php/logout.php", function () {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    });
+  });
+}
+
+
 
   //ofertas
 if (window.location.pathname.includes("ofertar.html")) {
@@ -189,24 +212,25 @@ if (window.location.pathname.includes("ofertar.html")) {
 
   const acciones = $("<div>").addClass("acciones-oferta mt-3 d-flex justify-content-center gap-2");
 
-  $("<button>")
-    .addClass("btn btn-sm btn-outline-primary btn-editar")
-    .text("Editar")
-    .attr("data-id", oferta.id)
-    .appendTo(acciones);
+$("<button>")
+  .addClass("btn btn-sm btn-outline-primary btn-editar")
+  .html('<i class="bi bi-pencil-square"></i> Editar')
+  .attr("data-id", oferta.id)
+  .appendTo(acciones);
 
-  $("<button>")
-    .addClass("btn btn-sm btn-outline-danger btn-eliminar")
-    .text("Eliminar")
-    .attr("data-id", oferta.id)
-    .appendTo(acciones);
+$("<button>")
+  .addClass("btn btn-sm btn-outline-danger btn-eliminar")
+  .html('<i class="bi bi-trash3"></i> Eliminar')
+  .attr("data-id", oferta.id)
+  .appendTo(acciones);
 
-  // NUEVO BOTÓN DE VER SOLICITUDES
-  $("<a>")
-    .addClass("btn btn-sm btn-outline-success")
-    .text("Solicitudes")
-    .attr("href", `solicitudes.html?id=${oferta.id}`)
-    .appendTo(acciones);
+// NUEVO BOTÓN DE VER SOLICITUDES
+$("<a>")
+  .addClass("btn btn-sm btn-outline-success")
+  .html('<i class="bi bi-people-fill"></i> Solicitudes')
+  .attr("href", `solicitudes.html?id=${oferta.id}`)
+  .appendTo(acciones);
+
 
   body.append(acciones);
   tarjeta.append(body);
