@@ -40,7 +40,8 @@ if ($resultado->num_rows === 1) {
         $_SESSION['usuario'] = $fila['usuario'];
         $_SESSION['email'] = $email;
         $_SESSION['usuario_id'] = $fila['id'];
-
+     $logMsg = "[" . date("Y-m-d H:i:s") . "] Inicio de sesión: Usuario '{$fila['usuario']}' con email '$email'\n";
+        file_put_contents("../logs/registro.log", $logMsg, FILE_APPEND);
         echo json_encode([
             "success" => true,
             "message" => "Sesión iniciada",

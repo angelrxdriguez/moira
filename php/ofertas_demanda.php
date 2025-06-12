@@ -18,7 +18,6 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Obtener ID de usuario actual
 $email = $_SESSION['email'];
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);

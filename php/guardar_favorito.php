@@ -35,7 +35,6 @@ if ($result->num_rows !== 1) {
 $usuario_id = $result->fetch_assoc()['id'];
 $stmt->close();
 
-// Verificar si ya está en favoritos
 $stmt = $conn->prepare("SELECT 1 FROM favoritos WHERE usuario_id = ? AND oferta_id = ?");
 $stmt->bind_param("ii", $usuario_id, $oferta_id);
 $stmt->execute();
@@ -43,14 +42,12 @@ $existe = $stmt->get_result()->num_rows > 0;
 $stmt->close();
 
 if ($existe) {
-    // Eliminar de favoritos
     $stmt = $conn->prepare("DELETE FROM favoritos WHERE usuario_id = ? AND oferta_id = ?");
     $stmt->bind_param("ii", $usuario_id, $oferta_id);
     $stmt->execute();
     $stmt->close();
     echo json_encode(["success" => true, "action" => "removed"]);
 } else {
-    // Insertar en favoritos
     $stmt = $conn->prepare("INSERT INTO favoritos (usuario_id, oferta_id) VALUES (?, ?)");
     $stmt->bind_param("ii", $usuario_id, $oferta_id);
     $stmt->execute();

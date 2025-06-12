@@ -18,7 +18,6 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Obtener ID del usuario por nombre de usuario (sesión)
 if (!isset($_SESSION['email'])) {
   echo json_encode(["success" => false, "message" => "No hay sesión activa"]);
   exit;
@@ -36,7 +35,6 @@ if ($resultado->num_rows !== 1) {
 $usuario_id = $resultado->fetch_assoc()['id'];
 $stmt->close();
 
-// Obtener ofertas de ese usuario
 $stmt = $conn->prepare("SELECT * FROM ofertas WHERE usuario_id = ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();

@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Ajusta si el path es diferente
+require '../vendor/autoload.php'; 
 
 if (!isset($_SESSION['email'])) {
     echo json_encode(["success" => false, "message" => "Sesión no iniciada"]);

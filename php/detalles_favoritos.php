@@ -9,7 +9,6 @@ if (!$ids) {
 
 $idsArray = explode(",", $ids);
 
-// Seguridad: sanitizamos IDs
 $idsArray = array_map('intval', $idsArray);
 
 $conn = new mysqli("localhost", "root", "", "moira");

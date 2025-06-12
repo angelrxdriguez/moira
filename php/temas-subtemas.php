@@ -11,14 +11,12 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Obtener todos los temas
 $temas = [];
 $result = $conn->query("SELECT id, nombre FROM temas");
 while ($row = $result->fetch_assoc()) {
     $temas[$row['id']] = ["nombre" => $row['nombre'], "subtemas" => []];
 }
 
-// Obtener todos los subtemas
 $result = $conn->query("SELECT id, tema_id, nombre FROM subtemas");
 while ($row = $result->fetch_assoc()) {
     $tema_id = $row['tema_id'];
