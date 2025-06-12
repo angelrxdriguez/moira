@@ -615,7 +615,17 @@ function cargarOfertasFiltradas() {
 
   const emailSesion = sessionStorage.getItem("email");
   if (!emailSesion) {
-    contenedor.html("<p class='text-center text-light'>Inicia sesión para ver tus favoritos.</p>");
+ contenedor.html(`
+  <div class="d-flex justify-content-center align-items-center nosesion">
+    <div class="text-center text-white nosesion">
+      <h4>Debes iniciar sesión para ver las moiras disponibles.</h4>
+      <a href="sesion.html" class="btn btn-primary mt-3">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+      </a>
+    </div>
+  </div>
+`);
+
     return;
   }
 

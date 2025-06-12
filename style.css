@@ -440,6 +440,15 @@ background-color: #222222 !important;
 .demanda .btn-primary {
   border-radius: 0 0 0.5rem 0.5rem;
 }
+.d-flex.justify-content-center.align-items-center.nosesion{
+width: 100%;
+margin-left: 100%;
+padding: 15%;
+border-radius: 20px !important;
+}
+.text-center.text-white.nosesion{
+border-radius: 20px !important;
+}
 /*
 .btn-outline-danger{
   color: #a8d8ea !important;
