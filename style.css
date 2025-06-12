@@ -477,7 +477,6 @@ background-color: #222222 !important;
   color: #a8d8ea !important;
   border-radius: 25px;
   background-color: #111111c6;
-
 }
 .contenedor-favs{
 
@@ -488,7 +487,6 @@ display: grid !important;
 grid-template-columns: repeat(1,1fr) !important;
 gap: 15px;
 background-color: #222222 !important;
-
 }
 .fav{
   background-color: #333333 !important;
@@ -593,7 +591,7 @@ color: #111111 !important;
     margin-left: 15%;
   }
 .container.my-5.nosesion{
-  margin-left:50%;
+  margin-left:25%;
   width:210px;
 }
 .contenedor-sesion {
@@ -604,8 +602,36 @@ color: #111111 !important;
 .der-sesion{
   margin-left: 15%;
 }
+  .ofertascreadas {
+  display: grid !important;
+  grid-template-columns: repeat(1, 1fr) !important;
 }
-@media (min-width: 577px) and (max-width: 768px) {
+.demandas{
+  margin: 40px;
+display: grid !important;
+grid-template-columns: repeat(1,1fr) !important;
+gap: 15px;
+background-color: #222222 !important;
+}
+.fav{
+  background-color: #333333 !important;
+  color: white !important;
+  width: 75% !important;
+margin-left: 12.5% !important;
+}
+.tit-favs{
+  text-align: center;
+  padding: 20px;
+  color: #a8d8ea !important;
+  border-radius: 25px;
+  background-color: #111111c6;
+}
+.card.shadow-sm.mb-4.solicitud{
+width: 75% !important;
+margin-left: 15% !important;
+}
+}
+@media (min-width: 577px) and (max-width: 799px) {
   
     .info-box {
     margin-left: 25%;
@@ -621,5 +647,28 @@ color: #111111 !important;
 }
 .der-sesion{
   margin-left: 15%;
+}
+ .ofertascreadas {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  padding: 25px;
+  gap: 30px;
+}
+.demandas{
+  margin: 40px;
+display: grid !important;
+grid-template-columns: repeat(2,1fr) !important;
+gap: 15px;
+background-color: #222222 !important;
+}
+.fav{
+  background-color: #333333 !important;
+  color: white !important;
+  width: 60% !important;
+margin-left: 20% !important;
+}
+.card.shadow-sm.mb-4.solicitud{
+width: 75% !important;
+margin-left: 15% !important;
 }
 }

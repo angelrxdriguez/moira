@@ -450,7 +450,7 @@ if (solicitud.estado === "aceptado") estadoClass = "aceptado";
 else if (solicitud.estado === "rechazado") estadoClass = "rechazado";
 
 const card = $("<div>")
-  .addClass(`card shadow-sm mb-4 ${estadoClass}`)
+  .addClass(`card shadow-sm mb-4 solicitud ${estadoClass}`)
   .attr("data-id", solicitud.id)
 .attr("data-reseñado", solicitud.usuario_id); // <- asegúrate de tener este dato
 
