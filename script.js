@@ -4,26 +4,27 @@ $('.form-log').on('submit', function (e) {
 
   const email = $('#email').val();
   const contra = $('#contra').val();
+  const $errorP = $('.error');
+  $errorP.text("");
 
   $.post('php/loguin.php', { email, contra }, function (res) {
-    const data = JSON.parse(res);
+    const data = typeof res === 'string' ? JSON.parse(res) : res;
 
-    if (data.success) {
+    if(data.success) {
       sessionStorage.setItem('usuario', data.usuario);
-      sessionStorage.setItem('email', data.email);
+      sessionStorage.setItem('email',data.email);
 
-      // Redirección especial si es el admin
       if (data.email === 'admin@admin.admin' && contra === 'admin') {
         window.location.href = 'admin.html';
       } else {
         window.location.href = 'perfil.html';
       }
-
-    } else {
-      alert(data.message);
+    }else {
+      $errorP.text(data.message);
     }
-  });
+  }, "json");
 });
+
 
 $("#formCrearOferta").on("submit", function (e) {
   e.preventDefault();
@@ -35,7 +36,6 @@ $("#formCrearOferta").on("submit", function (e) {
     console.log("Respuesta del servidor:", respuesta);
 
     if (respuesta.success) {
-      alert("Oferta guardada correctamente");
       window.location.href = "ofertar.html";
     } else {
       alert("Error: " + respuesta.message);
@@ -418,7 +418,6 @@ $("#formSolicitudServicio").on("submit", function (e) {
 
   $.post("php/guardar_solicitud.php", datos, function (respuesta) {
     if (respuesta.success) {
-      alert("Solicitud enviada correctamente.");
       $("#modalSolicitudServicio").modal("hide");
       $("#formSolicitudServicio")[0].reset();
     } else {
@@ -616,14 +615,17 @@ function cargarOfertasFiltradas() {
   const emailSesion = sessionStorage.getItem("email");
   if (!emailSesion) {
  contenedor.html(`
-  <div class="d-flex justify-content-center align-items-center nosesion">
-    <div class="text-center text-white nosesion">
-      <h4>Debes iniciar sesión para ver las moiras disponibles.</h4>
-      <a href="sesion.html" class="btn btn-primary mt-3">
+<div class="container my-5 nosesion">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 text-center text-white bg-dark p-4 rounded-4 shadow">
+      <h4 class="mb-3">Debes iniciar sesión para ver las moiras disponibles.</h4>
+      <a href="sesion.html" class="btn btn-primary">
         <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
       </a>
     </div>
   </div>
+</div>
+
 `);
 
     return;
@@ -792,7 +794,6 @@ $("#btnConfirmarResena").on("click", function () {
     reseñado_id
   }, function (res) {
     if (res.success) {
-      alert("¡Reseña enviada correctamente!");
       $("#modalResena").modal("hide");
     } else {
       alert("Error al guardar la reseña: " + res.message);

@@ -20,28 +20,34 @@ if (empty($email) || empty($contra)) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT id, usuario, contrasena FROM usuarios WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, usuario, contrasena, verificado FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $resultado = $stmt->get_result();
 
 if ($resultado->num_rows === 1) {
     $fila = $resultado->fetch_assoc();
-    
-if ($fila['contrasena'] === $contra) {
-    $_SESSION['usuario'] = $fila['usuario'];
-    $_SESSION['email'] = $email;
-    $_SESSION['usuario_id'] = $fila['id']; // <-- ¡IMPORTANTE!
 
-    echo json_encode([
-        "success" => true,
-        "message" => "Sesión iniciada",
-        "usuario" => $fila['usuario'],
-        "email" => $email
-    ]);
-}
+    if ($fila['verificado'] != 1) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Tu cuenta aún no ha sido verificada. Por favor revisa tu correo electrónico."
+        ]);
+        exit();
+    }
 
-else {
+    if ($fila['contrasena'] === $contra) {
+        $_SESSION['usuario'] = $fila['usuario'];
+        $_SESSION['email'] = $email;
+        $_SESSION['usuario_id'] = $fila['id'];
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Sesión iniciada",
+            "usuario" => $fila['usuario'],
+            "email" => $email
+        ]);
+    } else {
         echo json_encode(["success" => false, "message" => "Contraseña incorrecta"]);
     }
 } else {

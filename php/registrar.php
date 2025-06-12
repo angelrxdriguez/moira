@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Ajusta el path si hace falta
+require '../vendor/autoload.php';
 
 $host = "localhost";
 $usuario = "root";
@@ -35,50 +35,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, contrasena, fecha_nacimiento) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $usuario, $email, $contra, $fechaNacimiento);
+    // Generar token
+    $token = bin2hex(random_bytes(32));
+
+    $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, contrasena, fecha_nacimiento, verificado, token_verificacion) VALUES (?, ?, ?, ?, 0, ?)");
+    $stmt->bind_param("sssss", $usuario, $email, $contra, $fechaNacimiento, $token);
 
     if ($stmt->execute()) {
-    // Guardar log de registro
-    $logMsg = "[" . date("Y-m-d H:i:s") . "] Registro exitoso: Usuario '$usuario' con email '$email'\n";
-    file_put_contents("../logs/registro.log", $logMsg, FILE_APPEND);
+        // Guardar log
+        $logMsg = "[" . date("Y-m-d H:i:s") . "] Registro pendiente: Usuario '$usuario' con email '$email'\n";
+        file_put_contents("../logs/registro.log", $logMsg, FILE_APPEND);
 
-    // Envío de correo con PHPMailer
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'panaderorodriguezangel.sangrina@gmail.com';
-        $mail->Password = 'mljq nlhv kzcw vwgh';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        // Enviar correo con token
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'panaderorodriguezangel.sangrina@gmail.com';
+            $mail->Password = 'mljq nlhv kzcw vwgh';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
 
-        $mail->setFrom('panaderorodriguezangel.sangrina@gmail.com', 'Equipo Moira');
-        $mail->addAddress($email, $usuario);
+            $mail->setFrom('panaderorodriguezangel.sangrina@gmail.com', 'Equipo Moira');
+            $mail->addAddress($email, $usuario);
 
-        $mail->isHTML(true);
-        $mail->Subject = 'Bienvenido a Moira';
-        $mail->AddEmbeddedImage('../source/img/moira-logo2.png', 'logo_moira');
+            $mail->isHTML(true);
+            $mail->Subject = 'Confirma tu registro en Moira';
+            $mail->AddEmbeddedImage('../source/img/moira-logo2.png', 'logo_moira');
 
-        $mail->Body = "
-            <h3>Hola <b>$usuario</b>,</h3>
-            <p>Gracias por registrarte en Moira.</p>
-            <p>Ya puedes acceder a tu cuenta. ¡Trabaja Inteligente y pide un Moira!</p>
-            <br>
-            <img src='cid:logo_moira' alt='Moira Logo' style='width:350px;'>
-            <p>Un saludo,<br>El equipo de Moira</p>
-        ";
+            $mail->Body = "
+                <h3>Hola <b>$usuario</b>,</h3>
+                <p>Gracias por registrarte en Moira. Para activar tu cuenta, haz clic en el siguiente botón:</p>
+                <p><a href='https://localhost/moira/php/verificar.php?token=$token' style='padding:10px 15px; background:#007bff; color:white; text-decoration:none; border-radius:5px;'>Confirmar cuenta</a></p>
+                <br>
+                <img src='cid:logo_moira' alt='Moira Logo' style='width:350px;'>
+                <p>Este enlace caduca en 24 horas.</p>
+                <p>Un saludo,<br>El equipo de Moira</p>
+            ";
 
-        $mail->send();
-    } catch (Exception $e) {
-        // Puedes hacer log de error si lo deseas también
-    }
+            $mail->send();
+        } catch (Exception $e) {
+            // Error de envío
+        }
 
-    header("Location: ../sesion.html?registro=exito");
-    exit();
-}
- else {
+        header("Location: ../pendiente.html");
+        exit();
+    } else {
         echo "Error al registrar: " . $stmt->error;
     }
 
