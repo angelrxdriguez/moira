@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contra = $_POST['contra'] ?? '';
     $repiteContra = $_POST['repiteContra'] ?? '';
     $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
+    $fotoPorDefecto = 'source/img/moira-logo.png';
 
     if ($contra !== $repiteContra) {
         die("Las contraseñas no coinciden.");
@@ -38,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Generar token
     $token = bin2hex(random_bytes(32));
 
-    $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, contrasena, fecha_nacimiento, verificado, token_verificacion) VALUES (?, ?, ?, ?, 0, ?)");
-    $stmt->bind_param("sssss", $usuario, $email, $contra, $fechaNacimiento, $token);
+    $stmt = $conn->prepare("INSERT INTO usuarios (usuario, email, contrasena, fecha_nacimiento, verificado, token_verificacion, foto) VALUES (?, ?, ?, ?, 0, ?, ?)");
+    $stmt->bind_param("ssssss", $usuario, $email, $contra, $fechaNacimiento, $token, $fotoPorDefecto);
 
     if ($stmt->execute()) {
         // Guardar log
@@ -88,3 +89,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 $conn->close();
+

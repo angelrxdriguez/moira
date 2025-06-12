@@ -52,7 +52,7 @@ $("#formCrearOferta").on("submit", function (e) {
 $(document).ready(function () {
   $.get('php/usuario.php', function (res) {
     const data = JSON.parse(res);
-    if (data.usuario) {
+    if (data.usuario) {+
       $('.sesion-link').text(data.usuario).attr('href', 'perfil.html');
     }
   });
@@ -146,6 +146,41 @@ $('#tema').on('change', function () {
 if (window.location.pathname.includes("perfil.html")) { 
   const usuario = sessionStorage.getItem("usuario");
   const email = sessionStorage.getItem("email");
+$.get("php/usuario_completo.php", function (res) {
+  if (res.success && res.usuario) {
+    const { usuario, email, foto } = res.usuario;
+
+    $("#perfil-nombre").text(usuario);
+    $("#perfil-email").text(email);
+    $(".perfil-foto").attr("src", foto || "source/moira-logo.png");
+  } else {
+    console.warn("No se pudo cargar el usuario:", res.message);
+  }
+});
+$(document).on("click", ".perfil-foto", function () {
+  $("#modalEditarFoto").modal("show");
+});
+$("#formEditarFoto").on("submit", function (e) {
+  e.preventDefault();
+
+  const nuevaRuta = $("#nuevaRutaFoto").val().trim();
+  const email = sessionStorage.getItem("email");
+
+  if (!nuevaRuta || !email) {
+    return;
+  }
+
+  $.post("php/actualizar_foto.php", { email: email, foto: nuevaRuta }, function (res) {
+    const data = JSON.parse(res);
+
+    if (data.success) {
+      $(".perfil-foto").attr("src", nuevaRuta);
+      $("#modalEditarFoto").modal("hide");
+    } else {
+      alert("Error al actualizar la foto.");
+    }
+  });
+});
 
   if (!usuario) {
     window.location.href = "sesion.html";
@@ -336,7 +371,7 @@ $("#btnConfirmarEliminar").on("click", function () {
 });
 //DEMANDAS----------------------
 if (window.location.pathname.includes("demandar.html")) {
-  cargarOfertasFiltradas(); // ✅ cargar la primera vez
+  cargarOfertasFiltradas();
 }
 
 
@@ -445,14 +480,14 @@ if (window.location.pathname.includes("solicitudes.html")) {
       contenedor.empty();
 data.solicitudes.forEach(solicitud => {
   
-  let estadoClass = "solicitud"; // por defecto
+  let estadoClass = "solicitud"; 
 if (solicitud.estado === "aceptado") estadoClass = "aceptado";
 else if (solicitud.estado === "rechazado") estadoClass = "rechazado";
 
 const card = $("<div>")
   .addClass(`card shadow-sm mb-4 solicitud ${estadoClass}`)
   .attr("data-id", solicitud.id)
-.attr("data-reseñado", solicitud.usuario_id); // <- asegúrate de tener este dato
+.attr("data-reseñado", solicitud.usuario_id); 
 
 console.log("Solicitudes recibidas:", data.solicitudes);
 
@@ -596,11 +631,11 @@ $(document).on("click", ".btn-aceptar, .btn-rechazar", function () {
 
 
 
-
+/*
   // Filtrar al cambiar cualquier select
   $("#filtro-tema, #filtro-comunidad, #filtro-provincia, #filtro-ciudad").on("change", function () {
     cargarOfertasFiltradas();
-  });
+  });*/
 function cargarOfertasFiltradas() {
   const filtros = {
     tema: $("#filtro-tema").val(),
@@ -770,7 +805,6 @@ function renderizarEstrellas(valorActual = 0) {
   $("#btnConfirmarResena").prop("disabled", valorActual === 0);
 }
 
-// Click en botón finalizado
 $(document).on("click", ".btn-finalizado", function () {
   const reseñadoId = $(this).closest(".card").attr("data-reseñado");
   $("#resenaDestino").val(reseñadoId);
@@ -778,13 +812,11 @@ $(document).on("click", ".btn-finalizado", function () {
   $("#modalResena").modal("show");
 });
 
-// Click en estrella
 $(document).on("click", "#estrellas i", function () {
   const valor = $(this).data("valor");
   renderizarEstrellas(valor);
 });
 
-// Enviar reseña
 $("#btnConfirmarResena").on("click", function () {
   const valoracion = $("#resenaValor").val();
   const reseñado_id = $("#resenaDestino").val();
