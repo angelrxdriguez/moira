@@ -220,7 +220,6 @@ color: #a8d8ea !important;
   text-align: center;
 }
 .sinoferta{
-  margin-top:100px;
 }
 .crearoferta{
   background-color: #a8d8ea;
@@ -588,4 +587,10 @@ background-color: #002939 !important;
 padding: 25px !important;
 border-radius: 20px !important;
 transition: 0.2s;
+}
+/*admin*/
+.tablahead{
+background-color: #a8d8ea !important;
+border: solid 3px;
+color: #111111 !important;
 }

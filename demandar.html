@@ -51,47 +51,54 @@
   </nav>
 
 <div class="contenedor-demanda">
-<div class="container mt-5 mb-4 py-4 px-3 rounded-4 bg-dark shadow-lg">
-    <div class="row g-4 justify-content-center text-white">
-      <div class="col-12 col-md-3">
-      <label for="filtro-tema" class="form-label">
-  <i class="bi bi-back me-1"></i> Tema
-</label>
 
-        <select id="filtro-tema" class="form-select rounded-3 shadow-sm border-light">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="col-12 col-md-3">
-     <label for="filtro-comunidad" class="form-label">
-  <i class="bi bi-globe-americas me-1"></i> Comunidad
-</label>
+  <div class="container mt-4 d-md-none text-center">
+    <button class="btn btn-dark mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosDemanda" aria-expanded="false" aria-controls="filtrosDemanda">
+      <i class="bi bi-funnel-fill me-1"></i> Mostrar/Ocultar filtros
+    </button>
+  </div>
 
-        <select id="filtro-comunidad" class="form-select rounded-3 shadow-sm border-light">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <div class="col-12 col-md-3">
-    <label for="filtro-provincia" class="form-label">
-  <i class="bi bi-map me-1"></i> Provincia
-</label>
-
-        <select id="filtro-provincia" class="form-select rounded-3 shadow-sm border-light" disabled>
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <div class="col-12 col-md-3">
-        <label for="filtro-ciudad" class="form-label">
-  <i class="bi bi-building me-1"></i> Ciudad
-</label>
-
-        <select id="filtro-ciudad" class="form-select rounded-3 shadow-sm border-light" disabled>
-          <option value="">Todas</option>
-        </select>
+  <div id="filtrosDemanda" class="collapse show d-md-block">
+    <div class="container mt-2 mb-4 py-4 px-3 rounded-4 bg-dark shadow-lg">
+      <div class="row g-4 justify-content-center text-white">
+        <div class="col-12 col-md-3">
+          <label for="filtro-tema" class="form-label">
+            <i class="bi bi-back me-1"></i> Tema
+          </label>
+          <select id="filtro-tema" class="form-select rounded-3 shadow-sm border-light">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="filtro-comunidad" class="form-label">
+            <i class="bi bi-globe-americas me-1"></i> Comunidad
+          </label>
+          <select id="filtro-comunidad" class="form-select rounded-3 shadow-sm border-light">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="filtro-provincia" class="form-label">
+            <i class="bi bi-map me-1"></i> Provincia
+          </label>
+          <select id="filtro-provincia" class="form-select rounded-3 shadow-sm border-light" disabled>
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="filtro-ciudad" class="form-label">
+            <i class="bi bi-building me-1"></i> Ciudad
+          </label>
+          <select id="filtro-ciudad" class="form-select rounded-3 shadow-sm border-light" disabled>
+            <option value="">Todas</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
+
 </div>
+
 
   <div class="demandas"></div>
 </div>
