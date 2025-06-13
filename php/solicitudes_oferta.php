@@ -26,8 +26,15 @@ if (!$oferta_id) {
 }
 
 // AÑADIMOS el campo 'estado' en el SELECT
-$stmt = $conn->prepare("SELECT id, usuario_id, nombre, apellidos, telefono, email, presentacion, archivo, fecha_envio, estado
- FROM solicitudes_servicio WHERE oferta_id = ?");
+$stmt = $conn->prepare("
+    SELECT s.id, s.usuario_id, s.nombre, s.apellidos, s.telefono, s.email, 
+           s.presentacion, s.archivo, s.fecha_envio, s.estado,
+           u.foto
+    FROM solicitudes_servicio s
+    JOIN usuarios u ON s.usuario_id = u.id
+    WHERE s.oferta_id = ?
+");
+
 $stmt->bind_param("i", $oferta_id);
 $stmt->execute();
 $result = $stmt->get_result();

@@ -265,7 +265,7 @@ $("<button>")
   .attr("data-id", oferta.id)
   .appendTo(acciones);
 
-// NUEVO BOTÓN DE VER SOLICITUDES
+// VER SOLICITUDES
 $("<a>")
   .addClass("btn btn-sm btn-outline-success")
   .html('<i class="bi bi-people-fill"></i> Solicitudes')
@@ -341,7 +341,6 @@ $("#formEditarOferta").on("submit", function (e) {
 
   $.post("php/editar_oferta.php", $(this).serialize(), function (res) {
     if (res.success) {
-      alert("Oferta actualizada correctamente.");
       location.reload(); // recargar para ver cambios
     } else {
       alert("Error: " + res.message);
@@ -360,7 +359,6 @@ $("#btnConfirmarEliminar").on("click", function () {
 
   $.post("php/eliminar_oferta.php", { id: ofertaAEliminar }, function (res) {
     if (res.success) {
-      alert("Oferta eliminada con éxito.");
       location.reload();
     } else {
       alert("Error al eliminar: " + res.message);
@@ -492,6 +490,13 @@ const card = $("<div>")
 console.log("Solicitudes recibidas:", data.solicitudes);
 
 const body = $("<div>").addClass("card-body");
+const img = $("<img>")
+  .addClass("rounded-circle mb-3")
+  .attr("src", solicitud.foto || "source/img/moira-logo.png")
+  .attr("alt", "Foto de perfil")
+  .css({ width: "80px", height: "80px", objectFit: "cover" });
+
+body.prepend(img);
 
 $("<h5>").addClass("card-title fw-bold text-primary").text(`${solicitud.nombre} ${solicitud.apellidos}`).appendTo(body);
 $("<hr>").appendTo(body);
